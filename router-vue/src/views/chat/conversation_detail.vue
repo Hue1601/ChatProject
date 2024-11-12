@@ -1,7 +1,7 @@
 <template>
   <div class="container_detail" style="height: 100vh">
     <div class="header">
-      <div style="width: 15%; text-align:center" @click="this.$router.push({ name: 'list_conversation' })">
+      <div style="width: 15%; margin-left:17px" @click="this.$router.push({ name: 'list_conversation' })">
         <img src="/images/back.png" alt="" />
       </div>
       <div class="chat_title">
@@ -22,11 +22,10 @@
             <span class="time_date"> {{ formatDate(message.timestamp) }}</span>
           </div>
           <div v-else class="message_send">
-            <div class="sent">
-          
+            <div class="send_bubble">
               <p>{{ message.messagetext }}</p>
-              <span class="time_date">{{ formatDate(message.timestamp) }}</span>
             </div>
+             <span class="time_date">{{ formatDate(message.timestamp) }}</span>
           </div>
         </div>
       </div>
@@ -122,10 +121,12 @@ export default {
 }
 .body_chat_detail {
   background: #f7f8fa;
+  overflow-y: hidden;
 }
 .list_message {
-  height: 84vh;
+  height: 85vh;
   padding: 10px;
+  overflow-y: scroll;
 }
 .input_bar {
   display: flex;
@@ -166,6 +167,7 @@ export default {
   display: flex;
   max-width: 90%;
 }
+.send_bubble,
 .received_bubble {
   width: fit-content;
   max-width: 80%;

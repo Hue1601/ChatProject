@@ -13,8 +13,6 @@ public class Conversations {
     private Integer id;
 
     private String conversationname;
-//    @ManyToOne @JoinColumn(name="userid")
-//    private Users userid;
 
 
     public Conversations() {

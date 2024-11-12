@@ -1,17 +1,17 @@
 package com.example.routervuebe.controller;
 
+import com.example.routervuebe.service.ConversationService;
 import com.example.routervuebe.entity.Conversations;
 import com.example.routervuebe.entity.Messages;
 import com.example.routervuebe.entity.Users;
 import com.example.routervuebe.repo.ConversationsRepo;
 import com.example.routervuebe.repo.MessagesRepo;
-import com.example.routervuebe.repo.UsersRepo;
+import com.example.routervuebe.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -19,16 +19,17 @@ import java.util.*;
 @CrossOrigin("http://localhost:5173")
 public class ChatController {
     @Autowired
-    private UsersRepo usersRepo;
+    private UserRepository userRepository;
 
     @Autowired
     private MessagesRepo messagesRepo;
 
     @Autowired
-    private ConversationsRepo conversationsRepo;
+    private ConversationService conversationService;
+
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Users users) {
-        Optional<Users> findUser = usersRepo.findByUsername(users.getUsername());
+       Optional<Users> findUser = userRepository.findByUsername(users.getUsername());
         if (findUser.isPresent() && users.getPass().equals(findUser.get().getPass())) {
             Map<String, String> response = new HashMap<>();
             response.put("message", "Login successful!");
@@ -44,30 +45,12 @@ public class ChatController {
         return messagesRepo.findAll();
     }
 
-//    @GetMapping("/conversations")
-//    public List<Conversations> getConversationsByUserId(@RequestParam(value = "userid", required = false) Integer userid) {
-//        if (userid != null) {
-//            return conversationsRepo.findByUserId(userid);
-//        }
-//        return new ArrayList<>();
-//    }
-    @GetMapping("/conversation")
-   public List<Conversations> getAll(){
-        return conversationsRepo.findAll();
-    }
-//    @PostMapping("/messages")
-//    public ResponseEntity<Messages> sendMessage(@RequestBody Messages message) {
-//
-//        Conversations conversation = conversationsRepo.findById(message.getIdconversations().getId())
-//                .orElseThrow(() -> new ResourceNotFoundException("Conversation not found"));
-//
-//        Users user = usersRepo.findById(message.getIduser().getId())
-//                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-//        message.setTimestamp(LocalDateTime.now());
-//        message.setIdconversations(conversation);
-//        message.setIduser(user);
-//        Messages savedMessage = messagesRepo.save(message);
-//        return ResponseEntity.ok(savedMessage);
-//    }
 
+
+
+    @GetMapping("/list-conversation")
+    public ResponseEntity<List<Conversations>> getUserConversations(@RequestParam Integer userId) {
+        List<Conversations> conversations = conversationService.getConversationById(userId);
+        return ResponseEntity.ok(conversations);
+    }
 }
