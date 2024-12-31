@@ -14,6 +14,11 @@
               <a class="btn" style="color: white">Chat</a>
             </RouterLink>
           </li>
+           <li class="nav-item">
+            <RouterLink to="/create" style="color: white">
+              <a class="btn" style="color: white">Choose friend</a>
+            </RouterLink>
+          </li>
         </ul>
       </nav>
     </div>

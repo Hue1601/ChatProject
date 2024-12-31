@@ -21,18 +21,19 @@ private Integer id;
     private Users iduser;
 
     @ManyToOne
-    @JoinColumn(name="idconversations")
-    private Conversations idconversations;
+    @JoinColumn(name = "idconversations")
+    private Conversations conversation;
+
     public Messages() {
     }
 
-    public Messages(Integer id, String messagetext, String messagetype, LocalDateTime timestamp, Users iduser, Conversations idconversations) {
+    public Messages(Integer id, String messagetext, String messagetype, LocalDateTime timestamp, Users iduser, Conversations conversation) {
         this.id = id;
         this.messagetext = messagetext;
         this.messagetype = messagetype;
         this.timestamp = timestamp;
         this.iduser = iduser;
-        this.idconversations = idconversations;
+        this.conversation = conversation;
     }
 
     public Integer getId() {
@@ -75,11 +76,11 @@ private Integer id;
         this.iduser = iduser;
     }
 
-    public Conversations getIdconversations() {
-        return idconversations;
+    public Conversations getConversation() {
+        return conversation;
     }
 
-    public void setIdconversations(Conversations idconversations) {
-        this.idconversations = idconversations;
+    public void setConversation(Conversations conversation) {
+        this.conversation = conversation;
     }
 }

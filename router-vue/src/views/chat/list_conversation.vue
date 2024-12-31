@@ -4,9 +4,13 @@
     <div class="list_conversation">
       <div style="display: flex; margin-top: 10px">
         <input class="search_bar" placeholder="Search" v-model="searchQuery" />
-        <img src="/images/message-add.png" alt="Add" style="width: 40px; height:40px" />
+        <img
+          src="/images/message-add.png"
+          alt="Add"
+          style="width: 40px; height: 40px"
+        />
       </div>
-      <div class="body" ref="conversationListContainer"></div> 
+      <div class="body" id="conversationListContainer"></div>
     </div>
   </div>
 </template>
@@ -22,34 +26,45 @@ export default {
   },
   data() {
     return {
-      // loginUsername: this.$store.state.user.username,
-      // activeConversationId: null,
-      // activeConversationName: null,
-      // newMessage: "",
-      // conversations: [],
-      // messages: [],
-      // searchQuery: "",
+      conversationName: "",
+      searchQuery: "",
     };
+  },
+  computed: {
+    // Filter conversations based on searchQuery
+    filteredConversations() {
+      if (!this.searchQuery.trim()) {
+        return this.conversations; // Return all conversations if no search query
+      }
+      return this.conversations.filter((conversation) =>
+        conversation.conversationname
+          .toLowerCase()
+          .includes(this.searchQuery.toLowerCase())
+      );
+    },
   },
   methods: {
     async getListConversation() {
       const uId = this.$store.state.user.id;
       try {
-        const response = await axios.get(`${baseUrl}/list-conversation?userId=${uId}`);
+        const response = await axios.get(
+          `${baseUrl}/list-conversation?userId=${uId}`
+        );
         if (response.status === 200 && response.data.length > 0) {
           this.conversations = response.data;
-          this.renderConversations(); 
+          this.renderConversations();
         }
       } catch (error) {
         console.log("Error fetching conversations:", error);
       }
     },
+
+    //function to gen list conversation
     renderConversations() {
-      const container = this.$refs.conversationListContainer;
-      container.innerHTML = ""; // Clear previous contents
+      const container = document.getElementById("conversationListContainer");
+      container.innerHTML = "";
 
       this.conversations.forEach((conversation) => {
-        console.log("Rendering conversation:"+JSON.stringify( conversation));
         const chatPeopleDiv = document.createElement("div");
         chatPeopleDiv.className = "chat_people";
 
@@ -65,27 +80,39 @@ export default {
         span.innerText = conversation.conversationname;
 
         const p = document.createElement("p");
-        p.innerText = "last message"; 
+        p.innerText = "last message";
 
         chatIbDiv.appendChild(span);
         chatIbDiv.appendChild(p);
 
         const chatTimeDiv = document.createElement("div");
         chatTimeDiv.className = "chat_date";
-        chatTimeDiv.innerText = "11:11"; 
+        chatTimeDiv.innerText = "11:11";
 
         chatPeopleDiv.appendChild(images);
         chatPeopleDiv.appendChild(chatIbDiv);
         chatPeopleDiv.appendChild(chatTimeDiv);
-
-        chatPeopleDiv.onclick = () => this.loadConversationDetails(conversation.id); 
-
+        chatPeopleDiv.onclick = () => {
+          localStorage.setItem(
+            "conversationName",
+            conversation.conversationname
+          );
+          this.loadConversationDetails(
+            conversation.id,
+            conversation.conversationname
+          );
+        };
         container.appendChild(chatPeopleDiv);
       });
     },
-   
-    loadConversationDetails(conversationId) {
-      this.$router.push({ name: "conversation_detail", params: { conversationId } });
+
+    loadConversationDetails(conversationId, conversationName) {
+      this.$router.push({
+        name: "conversation_detail",
+        params: { conversationId },
+      });
+
+      console.log("n " + conversationName);
     },
   },
   mounted() {
@@ -93,44 +120,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.container {
-  max-width: 100%;
-}
-.body {
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.chat_img {
-  width: 50px;
-  height: 50px;
-}
-.conversation_name {
-  font-size: 14px;
-  font-weight: 500;
-  width: 97%;
-}
-.chat_ib {
-  float: left;
-  padding: 0 0 0 15px;
-  width: 90%;
-}
-.chat_date {
-  font-size: 12px;
-}
-.search_bar {
-  width: 95%;
-  height: 40px;
-}
-.nameuser {
-  border-bottom: 1px solid #c4c4c4;
-  padding: 0 15px;
-}
-.chat_people {
-  display: flex;
-  margin-top: 10px;
-  height: 60px;
-}
-</style>

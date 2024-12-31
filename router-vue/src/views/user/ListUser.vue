@@ -11,7 +11,7 @@
         <RouterLink to="/user/add" class="btn btn-outline-primary">Add</RouterLink> 
     </div>
 
-    <div class="card-header">
+    <div class="border_table">
       <table class="table" >
         <thead>
           <tr>
