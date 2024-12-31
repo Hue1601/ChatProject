@@ -1,0 +1,167 @@
+/* list_conversation */
+.container {
+    max-width: 100%;
+  }
+  .body {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .chat_img {
+    width: 50px;
+    height: 50px;
+  }
+  .conversation_name {
+    font-size: 14px;
+    font-weight: 500;
+    width: 97%;
+  }
+  .chat_ib {
+    float: left;
+    padding: 0 0 0 15px;
+    width: 90%;
+  }
+  .chat_date {
+    font-size: 12px;
+  }
+  .search_bar {
+    width: 95%;
+    height: 40px;
+  }
+  .nameuser {
+    border-bottom: 1px solid #c4c4c4;
+    padding: 0 15px;
+  }
+  .chat_people {
+    display: flex;
+    margin-top: 10px;
+    height: 60px;
+  }
+
+  /* conversation_detail */
+  .header_detail{
+    height: 56px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.avatar_header{
+  width: 35px;
+  height: 35px;
+}
+.chat_title {
+  display: flex;
+  align-items: center;
+}
+.body_chat_detail {
+  background: #f7f8fa;
+  overflow-y: hidden;
+}
+.list_message {
+  height: 85vh;
+  padding: 10px;
+  overflow-y: scroll;
+}
+.input_bar {
+  display: flex;
+  border-top: 1px solid #c4c4c4;
+  background: white;
+  min-height: 48px;
+  align-items: center;
+}
+.input_message {
+  font-size: 15px;
+  min-height: 40px;
+  width: 100%;
+  border: none;
+  padding-right: 50px;
+}
+.send_btn {
+  background: #05728f;
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 17px;
+  height: 33px;
+  position: absolute;
+  right: 0;
+  width: 33px;
+}
+.avatar_member {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+.member_name {
+  color: #747474;
+  display: block;
+  font-size: 12px;
+}
+.message_send{
+  display: flex;
+  justify-content: end;
+  margin-bottom: 10px;
+}
+.message_receive {
+  display: flex;
+  max-width: 90%;
+  margin-bottom: 10px;
+}
+.send_bubble,
+.received_bubble {
+  background: #ffffff;
+  padding: 10px;
+  border-radius: 5%;
+}
+.send_bubble p,
+.received_bubble p{
+margin-bottom: 0;
+margin-top: 0;
+}
+.time_date {
+  align-items: end;
+  display: flex ;
+  color: #747474;
+  font-size: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.message_content {
+  margin-left: 10px;
+  width: 70%;
+}
+
+/* create */
+.pagination{
+  padding-left: 38%; 
+}
+.btn-outline-primary{
+ margin-right: 13px;
+}
+.list{
+ height: 90vh;
+ border: 1px solid  #c4c4c4;
+}
+.border_button {
+ margin-top: 10px;
+ text-align: center;
+
+}
+.card-header{
+ height: 72vh;
+ margin-left: 20px;
+ margin-right: 20px;
+}
+.card-header{
+  display: none;
+  height: 72vh;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 15px;
+}
+.checkbox{
+  text-align: end;
+}
+.action_create{
+  display: flex;
+}

@@ -41,7 +41,11 @@ const router = createRouter({
       name: 'user-list',
       component: () => import('../views/user/ListUser.vue')
     },
-  
+    {
+      path: '/create',
+      name: 'create',
+      component: () => import('../views/chat/create.vue')
+    },
     {
       path: '/user/add',
       name: 'user-add',

@@ -7,8 +7,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface MessagesRepo extends JpaRepository<Messages,Integer> {
-//      @Query("SELECT m FROM Messages m WHERE m.idconversations.id = :conversationId")
-//      List<Messages> findMessagesByConversationId(@Param("conversationId") Integer conversationId);
-      @Query("SELECT m FROM Messages m JOIN FETCH m.iduser WHERE m.idconversations.id = :conversationId")
-      List<Messages> findByConversationId(@Param("conversationId") Integer conversationId);
+@Query("SELECT m FROM Messages m WHERE m.conversation.id = :conversationId")
+List<Messages> getConversationDetail(@Param("conversationId") Integer conversationId);
+
 }

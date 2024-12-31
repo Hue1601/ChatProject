@@ -1,8 +1,6 @@
 package com.example.routervuebe.controller;
 
 import com.example.routervuebe.entity.Users;
-import com.example.routervuebe.repo.ConversationsRepo;
-import com.example.routervuebe.repo.MessagesRepo;
 import com.example.routervuebe.repo.UserRepository;
 
 import jakarta.validation.Valid;
@@ -23,6 +21,13 @@ public class UsersController {
     @Autowired
     private UserRepository userRepository;
 
+//    @Autowired
+//    private CognitoService cognitoService;
+//
+//    @PostMapping("/login")
+//    public String loginUser(@RequestBody Users request) {
+//        return cognitoService.loginUser(request.getUsername(), request.getPass());
+//    }
     @GetMapping("/list")
     public List<Users> list(){
         return userRepository.findAll();
