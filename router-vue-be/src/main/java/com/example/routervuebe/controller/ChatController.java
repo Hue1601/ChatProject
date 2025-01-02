@@ -16,7 +16,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin("http://localhost:5173")
+
 public class ChatController {
     @Autowired
     private UserRepository userRepository;
@@ -27,19 +27,6 @@ public class ChatController {
     @Autowired
     private ConversationService conversationService;
 
-//    @PostMapping("/login")
-//    public ResponseEntity<Map<String, String>> login(@RequestBody Users users) {
-//       Optional<Users> findUser = userRepository.findByUsername(users.getUsername());
-//        if (findUser.isPresent() && users.getPass().equals(findUser.get().getPass())) {
-//            Map<String, String> response = new HashMap<>();
-//            response.put("message", "Login successful!");
-//            response.put("username", findUser.get().getUsername());
-//            response.put("id", findUser.get().getId().toString());
-//            return ResponseEntity.ok(response);
-//        } else {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-//        }
-//    }
     @GetMapping("/messages")
     public List<Messages> getMessages(@RequestParam Integer conversationId) {
         return messagesRepo.getConversationDetail(conversationId);

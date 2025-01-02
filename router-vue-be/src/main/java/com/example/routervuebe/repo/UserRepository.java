@@ -13,6 +13,7 @@ public interface UserRepository extends JpaRepository<Users,Integer> {
 //  Optional<Users> findByUsername(String username);
 Optional<Users> findById(Integer userId);
 
+//  @Query("SELECT u FROM Users u WHERE u.username LIKE ?1")
 Users findByUsername(String username);
 }
 
