@@ -1,5 +1,7 @@
 package com.example.routervuebe.security;
 
+import com.example.routervuebe.Exception.AuthenticationException;
+import com.example.routervuebe.Exception.MessageError;
 import com.example.routervuebe.Request.LoginRequest;
 import com.example.routervuebe.Response.LoginResponse;
 import com.example.routervuebe.entity.OTP;
@@ -7,6 +9,7 @@ import com.example.routervuebe.entity.Users;
 import com.example.routervuebe.repo.OTPRepo;
 import com.example.routervuebe.repo.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -15,6 +18,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -33,24 +37,32 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private UserRepository userRepo;
     @Autowired
-    private JwtUtil jwtUtil;
-
+    private JwtUtils jwtUtil;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws IOException, ServletException {
-        try {
-//            String authorization = request.getHeader("Authorization");
+            throws ServletException,IOException  {
+        String authHeader = request.getHeader("Authorization");
 
             if (isLogin(request)) {
                 handleLogin(request, response);
                 return;
             }
-//            if (authorization != null && authorization.startsWith("Bearer ")) {
-//
-//            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                try {
+                    Claims claims = jwtUtil.validateToken(token);
+                    String username = claims.getSubject();
+                    request.setAttribute("username", username);
+                } catch (Exception e) {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.getWriter().write(objectMapper.writeValueAsString(MessageError.INVALID_EXPIRED_TOKEN));
+                    return;
+
+                }
+            }
+
         filterChain.doFilter(request, response);
     }
 
@@ -58,40 +70,38 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         try {
             String body = new BufferedReader(new InputStreamReader(request.getInputStream()))
                     .lines().collect(Collectors.joining(System.lineSeparator()));
+
             LoginRequest loginRequest = new ObjectMapper().readValue(body, LoginRequest.class);
 
             processLogin(loginRequest, response);
-        } catch (IOException e) {
-            e.printStackTrace();
+        }  catch (AuthenticationException ex) {
+            // Xử lý lỗi xác thực
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json");
+            response.getWriter().write(objectMapper.writeValueAsString(ex.getMessageError().getMessage()));
+
         }
 
     }
 
-    public void processLogin(LoginRequest loginRequest, HttpServletResponse response)
-            throws IOException {
-        try {
-            Users users = userRepo.findByUsername(loginRequest.getUsername());
+    public void processLogin(LoginRequest loginRequest, HttpServletResponse response) throws IOException {
+        Users users = userRepo.findByUsername(loginRequest.getUsername());
 
-            if (users == null || !loginRequest.getUsername().equals(users.getUsername()) || !loginRequest.getPassword().equals(users.getPass())) {
-                System.out.println("loi");
-            }
-            String otp = createOTP();
-            saveOTP(users.getUsername(), otp, users.getEmail());
-            sendEmail(users.getEmail(), otp);
-            String token = jwtUtil.generateToken(users.getUsername());
-
-            LoginResponse loginResponse = new LoginResponse(token);
-            response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+       if (users == null || !loginRequest.getUsername().equals(users.getUsername()) || !loginRequest.getPassword().equals(users.getPass())) {
+            throw new AuthenticationException(MessageError.INVALID_USERNAME_PASSWORD, HttpStatus.FORBIDDEN);
         }
 
+        String otp = createOTP();
+        saveOTP(users.getUsername(), otp, users.getEmail());
+        sendEmail(users.getEmail(), otp);
+        String token = jwtUtil.generateToken(users.getUsername());
+        LoginResponse loginResponse = new LoginResponse(token);
+        response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
     }
 
     private boolean isLogin(HttpServletRequest request) {
-        return request.getServletPath().equals("/api/login")
-                && request.getMethod().equals("POST");
+        return request.getServletPath().equalsIgnoreCase("/api/login")
+                && request.getMethod().equalsIgnoreCase("POST");
     }
 
     private String createOTP() {
@@ -103,7 +113,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         otpRepo.save(otpEnty);
     }
 
-    private void sendEmail(String email,String otp) {
+    private void sendEmail(String email, String otp) {
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
@@ -113,14 +123,14 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-               return new PasswordAuthentication("huethipham1601@gmail.com", "ygnx nzdh kuzo xmpw");
+                return new PasswordAuthentication("huethipham1601@gmail.com", "ygnx nzdh kuzo xmpw");
 
             }
         });
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("huethipham1601@gmail.com"));
-            message.setRecipients(Message.RecipientType.TO,InternetAddress.parse(email));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
             message.setSubject("YOUR OTP");
             message.setText("Your otp is " + otp);
 

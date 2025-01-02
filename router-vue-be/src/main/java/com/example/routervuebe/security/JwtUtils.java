@@ -1,13 +1,14 @@
 package com.example.routervuebe.security;
 
+import com.example.routervuebe.repo.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -17,7 +18,8 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
-public class JwtUtil {
+public class JwtUtils {
+    private UserRepository userRepository;
     public static final String PRIVATE_KEY;
 
     static {
@@ -26,7 +28,7 @@ public class JwtUtil {
                     .replaceAll("-----.*-----", "")
                     .replaceAll("\\s", "");
             System.out.println("privatekey " +PRIVATE_KEY);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -39,7 +41,7 @@ public class JwtUtil {
                     .replaceAll("-----.*-----", "")
                     .replaceAll("\\s", "");
             System.out.println("PUBLIC_KEY " +PUBLIC_KEY);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -60,14 +62,18 @@ public class JwtUtil {
         return kf.generatePublic(spec);
     }
 
-    public String generateToken(String username) throws Exception {
+    public String generateToken(String username)  {
+      try {
         PrivateKey privateKey = getPrivateKey();
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis()+120000))
+                .setExpiration(new Date(System.currentTimeMillis()+480000))
                 .signWith(privateKey)
                 .compact();
+    } catch (Exception e) {
+        throw new RuntimeException("Error generating JWT", e);
+    }
     }
 
     public Claims validateToken(String token) throws Exception {

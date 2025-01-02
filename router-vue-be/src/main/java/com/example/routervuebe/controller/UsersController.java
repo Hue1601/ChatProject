@@ -16,18 +16,11 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin("http://localhost:5173")
+
 public class UsersController {
     @Autowired
     private UserRepository userRepository;
 
-//    @Autowired
-//    private CognitoService cognitoService;
-//
-//    @PostMapping("/login")
-//    public String loginUser(@RequestBody Users request) {
-//        return cognitoService.loginUser(request.getUsername(), request.getPass());
-//    }
     @GetMapping("/list")
     public List<Users> list(){
         return userRepository.findAll();
