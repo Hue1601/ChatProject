@@ -20,6 +20,11 @@ const router = createRouter({
       component: () => import('../views/Login.vue')
     },
     {
+      path: '/verify',
+      name: 'verify-otp',
+      component: () => import('../views/Login/VerifyOtp.vue')
+    },
+    {
       path: '/list_conversation',
       name: 'list_conversation',
       component: () => import('../views/chat/list_conversation.vue')

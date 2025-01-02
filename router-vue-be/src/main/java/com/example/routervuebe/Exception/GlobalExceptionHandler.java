@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<String> handleAuthenticationException(AuthenticationException ex) {
-        System.out.println("Handling AuthenException: " );
         return new ResponseEntity<>(ex.getMessageError().getMessage(), ex.getHttpStatus());
     }
 

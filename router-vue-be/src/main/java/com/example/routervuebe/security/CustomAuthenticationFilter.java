@@ -55,7 +55,6 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
                     Claims claims = jwtUtil.validateToken(token);
                     String username = claims.getSubject();
                     request.setAttribute("username", username);
-
                 } catch (Exception e) {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.getWriter().write(objectMapper.writeValueAsString(MessageError.INVALID_EXPIRED_TOKEN));
