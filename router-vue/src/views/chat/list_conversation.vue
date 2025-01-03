@@ -54,10 +54,9 @@ export default {
           },
           }
         );
-        if (response.status === 200 && response.data.length > 0) {
-         
+       
+        if (response.status === 200 ) {
           this.conversations = response.data;
-
           this.renderConversations();
         }
       } catch (error) {
@@ -112,13 +111,11 @@ export default {
       });
     },
 
-    loadConversationDetails(conversationId, conversationName) {
+    loadConversationDetails(conversationId) {
       this.$router.push({
         name: "conversation_detail",
         params: { conversationId },
       });
-
-      console.log("n " + conversationName);
     },
   },
   mounted() {

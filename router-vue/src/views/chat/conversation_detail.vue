@@ -34,7 +34,7 @@
 
 <script>
 import axios from "axios";
-const baseUrl = "http://localhost:8080/api";
+const baseUrl = " http://localhost:8080/api/detail-conversation";
 
 export default {
   name: "ConversationDetail",
@@ -43,22 +43,28 @@ export default {
     return {
       messages: [],
       newMessage: "",
-      loginUsername: this.$store.state.user.username,
+      loginUsername:sessionStorage.getItem("username"),
       activeConversationName: localStorage.getItem("conversationName"),
 
       activeConversationId: this.conversationId,
     };
   },
-  created() {
-    this.getConversationDetail();
-  },
+
   methods: {
     async getConversationDetail() {
+
       try {
+         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `${baseUrl}/messages?conversationId=${this.activeConversationId}`
+          `${baseUrl}/${this.activeConversationId}`,{
+            headers:{
+              Authorization :`Bearer ${token}`,
+            }
+          }
         );
+
         if (response.status === 200 && response.data.length > 0) {
+   
           this.messages = response.data;
           this.renderConversationDetail();
         }
@@ -73,7 +79,7 @@ export default {
 
       this.messages.forEach((message) => {
         // Check if the message is sent by the logged-in user
-        const isSendMessage = message.iduser.username === this.loginUsername;
+        const isSendMessage = message.username === this.loginUsername;
 
         const div = document.createElement("div");
         div.className = isSendMessage ? "message_send" : "message_receive";
@@ -87,7 +93,7 @@ export default {
 
           const username = document.createElement("span");
           username.className = "member_name";
-          username.innerHTML = message.iduser.username;
+          username.innerHTML = message.username;
 
           div.appendChild(img);
           borderName.appendChild(username);
@@ -101,11 +107,11 @@ export default {
         borderName.appendChild(receivedBubble);
 
         const text = document.createElement("p");
-        text.innerText = message.messagetext;
+        text.innerText = message.messageText;
 
         const messageTime = document.createElement("span");
         messageTime.className = "time_date";
-        messageTime.innerText = this.formatTime(message.timestamp);
+        messageTime.innerText = this.formatTime(message.createAt);
 
         if (isSendMessage) {
           div.appendChild(messageTime);
@@ -168,7 +174,11 @@ export default {
         listMessage.scrollTop = listMessage.scrollHeight;
       });
     }
+  },
+  mounted(){
+this.getConversationDetail();
   }
+  
 };
 </script>
 

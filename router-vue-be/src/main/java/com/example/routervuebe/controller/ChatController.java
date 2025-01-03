@@ -10,6 +10,7 @@ import com.example.routervuebe.Repository.MessagesRepo;
 import com.example.routervuebe.Repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,6 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api")
-
 public class ChatController {
     @Autowired
     private UserRepository userRepository;
@@ -29,11 +29,6 @@ public class ChatController {
     @Autowired
     private ConversationService conversationService;
 
-    @GetMapping("/messages")
-    public List<Messages> getMessages(@RequestParam Integer conversationId) {
-        return messagesRepo.getConversationDetail(conversationId);
-    }
-
     @PostMapping("/send-message")
     public Messages sendMessage(@RequestBody Messages message) {
         messagesRepo.save(message);
@@ -42,14 +37,18 @@ public class ChatController {
 
     @GetMapping("/list-conversation")
     public ResponseEntity<?> getConversationByUsername(HttpServletRequest request) {
-        String username = (String)  request.getAttribute("username");
+        String username = (String) request.getAttribute("username");
         List<ConversationResponse> conversations = userConversationRepo.findConversationsByUsername(username);
         return ResponseEntity.ok(conversations);
     }
+//    http://localhost:8080/detail-conversation?id=1
+//    @GetMapping("/detail-conversation")
+//    public List<Messages> getConversationDetails(@RequestParam Integer id) {
+//        return messagesRepo.getConversationDetail(id);
+//    }
+    @GetMapping("/detail-conversation/{conversationId}")
+    public ResponseEntity<?> getConversationById(@PathVariable Integer conversationId) {
+            return ResponseEntity.ok(messagesRepo.getConversationDetail(conversationId));
 
-@GetMapping("/detail-conversation")
-public List<Messages> getConversationDetails(@RequestParam Integer conversationId) {
-    return messagesRepo.getConversationDetail(conversationId);
-}
-
+    }
 }
