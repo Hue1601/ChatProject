@@ -1,6 +1,6 @@
 package com.example.routervuebe.security;
 
-import com.example.routervuebe.repo.UserRepository;
+import com.example.routervuebe.Repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.core.io.ClassPathResource;
@@ -68,7 +68,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis()+480000))
+                .setExpiration(new Date(System.currentTimeMillis()+1840000))
                 .signWith(privateKey)
                 .compact();
     } catch (Exception e) {

@@ -17,7 +17,7 @@
 <script>
 import CompHeader from "../../components/CompHeader.vue";
 import axios from "axios";
-const baseUrl = "http://localhost:8080/api";
+const baseUrl = "http://localhost:8080/api/list-conversation";
 
 export default {
   name: "web-chat",
@@ -45,13 +45,19 @@ export default {
   },
   methods: {
     async getListConversation() {
-      const uId = this.$store.state.user.id;
+
       try {
-        const response = await axios.get(
-          `${baseUrl}/list-conversation?userId=${uId}`
+        const token = localStorage.getItem("token");
+        const response = await axios.get( `${baseUrl}`,{
+            headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          }
         );
         if (response.status === 200 && response.data.length > 0) {
+         
           this.conversations = response.data;
+
           this.renderConversations();
         }
       } catch (error) {
@@ -77,7 +83,7 @@ export default {
 
         const span = document.createElement("span");
         span.className = "conversation_name";
-        span.innerText = conversation.conversationname;
+        span.innerText = conversation.conversationName;
 
         const p = document.createElement("p");
         p.innerText = "last message";
@@ -95,7 +101,7 @@ export default {
         chatPeopleDiv.onclick = () => {
           localStorage.setItem(
             "conversationName",
-            conversation.conversationname
+            conversation.conversationName
           );
           this.loadConversationDetails(
             conversation.id,

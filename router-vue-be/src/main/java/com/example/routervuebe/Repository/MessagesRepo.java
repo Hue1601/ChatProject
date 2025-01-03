@@ -1,5 +1,5 @@
-package com.example.routervuebe.repo;
-import com.example.routervuebe.entity.Messages;
+package com.example.routervuebe.Repository;
+import com.example.routervuebe.Entity.Messages;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

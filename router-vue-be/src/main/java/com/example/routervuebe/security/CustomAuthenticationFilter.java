@@ -4,10 +4,10 @@ import com.example.routervuebe.Exception.AuthenticationException;
 import com.example.routervuebe.Exception.MessageError;
 import com.example.routervuebe.Request.LoginRequest;
 import com.example.routervuebe.Response.LoginResponse;
-import com.example.routervuebe.entity.OTP;
-import com.example.routervuebe.entity.Users;
-import com.example.routervuebe.repo.OTPRepo;
-import com.example.routervuebe.repo.UserRepository;
+import com.example.routervuebe.Entity.OTP;
+import com.example.routervuebe.Entity.Users;
+import com.example.routervuebe.Repository.OTPRepo;
+import com.example.routervuebe.Repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.mail.*;
@@ -40,6 +40,10 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
     private JwtUtils jwtUtil;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    public CustomAuthenticationFilter(OTPRepo otpRepo) {
+        this.otpRepo = otpRepo;
+    }
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException,IOException  {

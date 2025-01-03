@@ -1,4 +1,4 @@
-package com.example.routervuebe.entity;
+package com.example.routervuebe.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

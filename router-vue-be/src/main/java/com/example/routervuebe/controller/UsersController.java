@@ -1,7 +1,7 @@
 package com.example.routervuebe.controller;
 
-import com.example.routervuebe.entity.Users;
-import com.example.routervuebe.repo.UserRepository;
+import com.example.routervuebe.Entity.Users;
+import com.example.routervuebe.Repository.UserRepository;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
