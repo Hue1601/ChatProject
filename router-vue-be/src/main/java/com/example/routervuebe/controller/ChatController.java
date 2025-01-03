@@ -1,14 +1,15 @@
 package com.example.routervuebe.controller;
 
+import com.example.routervuebe.Repository.ConversationsRepo;
+import com.example.routervuebe.Repository.UserConversationRepo;
+import com.example.routervuebe.Response.ConversationResponse;
 import com.example.routervuebe.service.ConversationService;
-import com.example.routervuebe.entity.Conversations;
-import com.example.routervuebe.entity.Messages;
-import com.example.routervuebe.entity.Users;
-import com.example.routervuebe.repo.ConversationsRepo;
-import com.example.routervuebe.repo.MessagesRepo;
-import com.example.routervuebe.repo.UserRepository;
+import com.example.routervuebe.Entity.Conversations;
+import com.example.routervuebe.Entity.Messages;
+import com.example.routervuebe.Repository.MessagesRepo;
+import com.example.routervuebe.Repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,8 @@ public class ChatController {
 
     @Autowired
     private MessagesRepo messagesRepo;
-
+    @Autowired
+    private UserConversationRepo userConversationRepo;
     @Autowired
     private ConversationService conversationService;
 
@@ -39,8 +41,9 @@ public class ChatController {
     }
 
     @GetMapping("/list-conversation")
-    public ResponseEntity<List<Conversations>> getUserConversations(@RequestParam Integer userId) {
-        List<Conversations> conversations = conversationService.getConversationById(userId);
+    public ResponseEntity<?> getConversationByUsername(HttpServletRequest request) {
+        String username = (String)  request.getAttribute("username");
+        List<ConversationResponse> conversations = userConversationRepo.findConversationsByUsername(username);
         return ResponseEntity.ok(conversations);
     }
 

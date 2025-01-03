@@ -1,7 +1,9 @@
-package com.example.routervuebe.entity;
+package com.example.routervuebe.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -12,30 +14,13 @@ public class Conversations {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String conversationname;
+    @Column(name = "conversationname")
+    private String conversationName;
 
+    @Column(name = "isgroup")
+    private Boolean isGroup;
 
-    public Conversations() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getConversationname() {
-        return conversationname;
-    }
-
-    public void setConversationname(String conversationname) {
-        this.conversationname = conversationname;
-    }
-
-    public Conversations(Integer id, String conversationname) {
-        this.id = id;
-        this.conversationname = conversationname;
-    }
+    @OneToMany(mappedBy = "conversationid")
+    private List<UserConversations> userConversations;
 }
+
