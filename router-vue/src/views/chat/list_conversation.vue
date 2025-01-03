@@ -25,27 +25,10 @@ export default {
     CompHeader,
   },
   data() {
-    return {
-      conversationName: "",
-      searchQuery: "",
-    };
-  },
-  computed: {
-    // Filter conversations based on searchQuery
-    filteredConversations() {
-      if (!this.searchQuery.trim()) {
-        return this.conversations; // Return all conversations if no search query
-      }
-      return this.conversations.filter((conversation) =>
-        conversation.conversationname
-          .toLowerCase()
-          .includes(this.searchQuery.toLowerCase())
-      );
-    },
+    return {};
   },
   methods: {
     async getListConversation() {
-
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get( `${baseUrl}`,{
@@ -98,14 +81,8 @@ export default {
         chatPeopleDiv.appendChild(chatIbDiv);
         chatPeopleDiv.appendChild(chatTimeDiv);
         chatPeopleDiv.onclick = () => {
-          localStorage.setItem(
-            "conversationName",
-            conversation.conversationName
-          );
-          this.loadConversationDetails(
-            conversation.id,
-            conversation.conversationname
-          );
+          localStorage.setItem("conversationName", conversation.conversationName);
+          this.loadConversationDetails(conversation.id);
         };
         container.appendChild(chatPeopleDiv);
       });

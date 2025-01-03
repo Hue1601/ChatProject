@@ -12,7 +12,7 @@ import lombok.Setter;
 public class ConversationResponse {
     private int id;
     private String conversationName;
-    private boolean isGroup;
+    private String type;
 
 
 }

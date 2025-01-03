@@ -17,8 +17,8 @@ public class Conversations {
     @Column(name = "conversationname")
     private String conversationName;
 
-    @Column(name = "isgroup")
-    private Boolean isGroup;
+    @Column(name = "type")
+    private String type;
 
     @OneToMany(mappedBy = "conversationid")
     private List<UserConversations> userConversations;

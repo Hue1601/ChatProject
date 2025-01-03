@@ -38,7 +38,7 @@ const baseUrl = " http://localhost:8080/api/detail-conversation";
 
 export default {
   name: "ConversationDetail",
-  props: ["conversationId", "conversationName"],
+  props: ["conversationId"],
   data() {
     return {
       messages: [],
@@ -55,16 +55,14 @@ export default {
 
       try {
          const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `${baseUrl}/${this.activeConversationId}`,{
+        const response = await axios.get(`${baseUrl}/${this.activeConversationId}`,{
             headers:{
               Authorization :`Bearer ${token}`,
             }
           }
         );
 
-        if (response.status === 200 && response.data.length > 0) {
-   
+        if (response.status === 200 ) {
           this.messages = response.data;
           this.renderConversationDetail();
         }
@@ -75,7 +73,7 @@ export default {
 
     renderConversationDetail() {
       const listMessage = document.getElementById("listMessage");
-      listMessage.innerHTML = ""; // Clear previous messages
+      listMessage.innerHTML = ""; 
 
       this.messages.forEach((message) => {
         // Check if the message is sent by the logged-in user
