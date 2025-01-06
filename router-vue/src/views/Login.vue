@@ -58,7 +58,8 @@ export default {
    
           // Lưu token vào localStorage
           localStorage.setItem("token", token);
-          sessionStorage.setItem("username", username);
+          sessionStorage.setItem("username", response.data.username);
+          sessionStorage.setItem("id", response.data.id);
           this.$router.push("/verify");
         }
       } 

@@ -51,4 +51,18 @@ public class ChatController {
             return ResponseEntity.ok(messagesRepo.getConversationDetail(conversationId));
 
     }
+
+    @PostMapping("/create-conversation")
+    public ResponseEntity<?> createConversation(@RequestBody Map<String, Object> requestBody) {
+        try {
+            String name = (String) requestBody.get("name");
+            String type = (String) requestBody.get("type");
+            List<Integer> userIds = (List<Integer>) requestBody.get("member");
+
+            Conversations conversation = conversationService.createConversation(name, type, userIds);
+            return ResponseEntity.ok(conversation);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }

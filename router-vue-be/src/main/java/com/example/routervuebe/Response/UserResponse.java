@@ -1,15 +1,15 @@
 package com.example.routervuebe.Response;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.relational.core.sql.In;
+import lombok.Setter;
 
-@AllArgsConstructor
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-public class LoginResponse {
-    private String token;
+@AllArgsConstructor
+public class UserResponse {
     private Integer id;
     private String username;
 }

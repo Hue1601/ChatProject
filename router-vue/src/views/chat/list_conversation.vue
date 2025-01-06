@@ -65,7 +65,7 @@ export default {
 
         const span = document.createElement("span");
         span.className = "conversation_name";
-        span.innerText = conversation.conversationName;
+        span.innerText = (conversation.conversationName).replace(/"/g, "");
 
         const p = document.createElement("p");
         p.innerText = "last message";

@@ -68,7 +68,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis()+18400000))
+                .setExpiration(new Date(System.currentTimeMillis()+1840000))
                 .signWith(privateKey)
                 .compact();
     } catch (Exception e) {

@@ -99,7 +99,11 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         saveOTP(users.getUsername(), otp, users.getEmail());
         sendEmail(users.getEmail(), otp);
         String token = jwtUtil.generateToken(users.getUsername());
-        LoginResponse loginResponse = new LoginResponse(token);
+//        LoginResponse loginResponse = new LoginResponse(token);
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setUsername(users.getUsername());
+        loginResponse.setToken(token);
+        loginResponse.setId(users.getId());
         response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
     }
 

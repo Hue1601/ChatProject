@@ -44,7 +44,7 @@ export default {
       messages: [],
       newMessage: "",
       loginUsername:sessionStorage.getItem("username"),
-      activeConversationName: localStorage.getItem("conversationName"),
+      activeConversationName: localStorage.getItem("conversationName").replace(/"/g,""),
 
       activeConversationId: this.conversationId,
     };

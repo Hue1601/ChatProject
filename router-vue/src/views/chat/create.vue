@@ -3,27 +3,45 @@
     <comp-header />
     <div class="list">
       <div class="border_button">
-        <button class="btn btn-outline-primary" @click="setChatType('group')" id="btnGroup">
+        <button
+          class="btn btn-outline-primary"
+          @click="setChatType('group')"
+          id="btnGroup"
+        >
           Group
         </button>
-        <button class="btn btn-outline-primary" @click="setChatType('private')" id="btnPrivate" >
+        <button
+          class="btn btn-outline-primary"
+          @click="setChatType('private')"
+          id="btnPrivate"
+        >
           Private
         </button>
       </div>
 
       <div class="card-header" id="tableListUser">
         <div class="action_create">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="search" @keyup.enter="SearchUser" />
-          <button class="btn btn-outline-primary">Create</button>
+          <input
+            class="form-control me-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+            v-model="search"
+            @keyup.enter="SearchUser"
+          />
+          <button class="btn btn-outline-primary" @click="createConversation()">
+            Create
+          </button>
         </div>
         <table class="table">
-          <tbody>
-            <tr v-for="(item, index) in users" :key="index">
+          <tbody id="listUser">
+            <!-- <tr v-for="(item, index) in users" :key="index">
+                <td>{{ item.id }}</td>
               <td>{{ item.username }}</td>
               <td class="checkbox">
                 <input type="checkbox" @click="handleCheckbox($event)" id="checkbox" class="checkbox"/>
               </td>
-            </tr>
+            </tr> -->
           </tbody>
         </table>
       </div>
@@ -40,8 +58,8 @@ export default {
   data() {
     return {
       users: [],
-      // username:'',
       search: "",
+      selectedUsers: [],
     };
   },
   components: {
@@ -53,29 +71,29 @@ export default {
       var btnPrivate = document.getElementById("btnPrivate");
       var btnGroup = document.getElementById("btnGroup");
       var tableListUser = document.getElementById("tableListUser");
-       tableListUser.style.display = "block";
+      tableListUser.style.display = "block";
       if (type == "group") {
-          btnGroup.classList.add('active');
-        btnPrivate.classList.remove('active');
+        btnGroup.classList.add("active");
+        btnPrivate.classList.remove("active");
       } else {
-        btnPrivate.classList.add('active');
-         btnGroup.classList.remove('active');
-        
+        btnPrivate.classList.add("active");
+        btnGroup.classList.remove("active");
       }
     },
-  async handleCheckbox(event) {
-  const chatType = sessionStorage.getItem("chatType");
-  if (chatType === "private") {
-    const checkboxes = document.querySelectorAll(".checkbox");
 
-    checkboxes.forEach((cb) => {
-      // Nếu checkbox hiện tại không phải checkbox được click, bỏ chọn nó
-      if (cb !== event.target) {
-        cb.checked = false;
-      }
-    });
-  } 
-},
+    //   async handleCheckbox(event) {
+    //   const chatType = sessionStorage.getItem("chatType");
+    //   if (chatType === "private") {
+    //     const checkboxes = document.querySelectorAll(".checkbox");
+
+    //     checkboxes.forEach((cb) => {
+    //       // Nếu checkbox hiện tại không phải checkbox được click, bỏ chọn nó
+    //       if (cb !== event.target) {
+    //         cb.checked = false;
+    //       }
+    //     });
+    //   }
+    // },
 
     async SearchUser() {
       try {
@@ -88,24 +106,109 @@ export default {
       }
     },
 
-    async GetListUser(page = 1) {
+    async GetListUser() {
       try {
-        const response = await axios.get(`${baseUrl}/pagination`, {
-          params: { p: page - 1 },
-        });
-        this.users = response.data.users;
-        this.totalPages = response.data.totalPages;
-        this.currentPage = response.data.currentPage + 1;
+        const body = document.getElementById("listUser");
+        const response = await axios.get(`${baseUrl}/list`);
+
+        if (response.status == 200) {
+          this.users = response.data;
+
+          this.users.forEach((user) => {
+            const tr = document.createElement("tr");
+
+            const id = document.createElement("td");
+            id.innerText = user.id;
+
+            const username = document.createElement("td");
+            username.innerText = user.username;
+
+            const borderCheckbox = document.createElement("td");
+            borderCheckbox.className = "checkbox";
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.className = "checkboxs";
+            checkbox.setAttribute("userCode", user.id);
+
+            checkbox.addEventListener("click", (event) => {
+              this.handleCheckbox(event, user);
+            });
+
+            borderCheckbox.appendChild(checkbox);
+
+            tr.appendChild(id);
+            tr.appendChild(username);
+            tr.appendChild(borderCheckbox);
+
+            body.appendChild(tr);
+          });
+        }
       } catch (error) {
         console.error(error);
       }
     },
+    async handleCheckbox(event, user) {
+      const chatType = sessionStorage.getItem("chatType");
+      if (chatType === "private") {
+        const checkboxes = document.querySelectorAll(".checkboxs");
+
+        // Uncheck all checkboxes except the one being clicked
+        checkboxes.forEach((cb) => {
+          if (cb !== event.target) {
+            cb.checked = false;
+          }
+        });
+        // this.selectedUsers.remove(user);
+        // this.selectedUsers.push(user)
+
+        this.selectedUsers = event.target.checked ? [user] : [];
+      }
+      console.log("Selected Users:", JSON.stringify(this.selectedUsers));
+     
+
+      sessionStorage.setItem(
+        "title",
+        JSON.stringify(this.selectedUsers[0].username)
+      );
+
+      sessionStorage.setItem(
+        "userCode",
+        JSON.stringify(this.selectedUsers[0].id)
+      );
+    },
+
+   
+    async createConversation() {
+  const chatType = sessionStorage.getItem("chatType");
+  const title = sessionStorage.getItem("title");
+  const userCode = sessionStorage.getItem("userCode");
+
+  const ownerCode = sessionStorage.getItem("id");
+
+  try {
+    const payload = {
+      name: title,
+      type: chatType,
+      member: [Number(ownerCode), Number(userCode)],
+    };
+
+    const response = await axios.post(`${baseUrl}/create-conversation`, payload);
+
+    if (response.status === 200) {
+      alert("Conversation created successfully!");
+      this.$router.push("/list_conversation");
+    }
+  } catch (error) {
+    console.error("Error creating conversation:", error.response || error);
+    alert(`Error: ${error.message}`);
+  }
+}
+
   },
   mounted() {
     this.GetListUser();
   },
 };
 </script>
-<style>
 
-</style>
