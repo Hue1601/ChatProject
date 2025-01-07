@@ -5,14 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-public class ConversationResponse {
-    private int id;
-    private String conversationName;
-    private String type;
-
-
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserResponse {
+    private Integer id;
+    private String username;
 }

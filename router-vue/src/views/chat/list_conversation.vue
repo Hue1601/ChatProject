@@ -25,27 +25,10 @@ export default {
     CompHeader,
   },
   data() {
-    return {
-      conversationName: "",
-      searchQuery: "",
-    };
-  },
-  computed: {
-    // Filter conversations based on searchQuery
-    filteredConversations() {
-      if (!this.searchQuery.trim()) {
-        return this.conversations; // Return all conversations if no search query
-      }
-      return this.conversations.filter((conversation) =>
-        conversation.conversationname
-          .toLowerCase()
-          .includes(this.searchQuery.toLowerCase())
-      );
-    },
+    return {};
   },
   methods: {
     async getListConversation() {
-
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get( `${baseUrl}`,{
@@ -54,10 +37,9 @@ export default {
           },
           }
         );
-        if (response.status === 200 && response.data.length > 0) {
-         
+       
+        if (response.status === 200 ) {
           this.conversations = response.data;
-
           this.renderConversations();
         }
       } catch (error) {
@@ -83,7 +65,7 @@ export default {
 
         const span = document.createElement("span");
         span.className = "conversation_name";
-        span.innerText = conversation.conversationName;
+        span.innerText = (conversation.conversationName).replace(/"/g, "");
 
         const p = document.createElement("p");
         p.innerText = "last message";
@@ -99,26 +81,19 @@ export default {
         chatPeopleDiv.appendChild(chatIbDiv);
         chatPeopleDiv.appendChild(chatTimeDiv);
         chatPeopleDiv.onclick = () => {
-          localStorage.setItem(
-            "conversationName",
-            conversation.conversationName
-          );
-          this.loadConversationDetails(
-            conversation.id,
-            conversation.conversationname
-          );
+          localStorage.setItem("conversationName", conversation.conversationName);
+          sessionStorage.setItem("Type", conversation.type);
+          this.loadConversationDetails(conversation.id);
         };
         container.appendChild(chatPeopleDiv);
       });
     },
 
-    loadConversationDetails(conversationId, conversationName) {
+    loadConversationDetails(conversationId) {
       this.$router.push({
         name: "conversation_detail",
         params: { conversationId },
       });
-
-      console.log("n " + conversationName);
     },
   },
   mounted() {

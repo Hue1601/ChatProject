@@ -165,3 +165,13 @@ margin-top: 0;
 .action_create{
   display: flex;
 }
+.active{
+  background: #0d6efd;
+  color: wheat;
+}
+
+/* create-conersation */
+.disable{
+  pointer-events: none;
+  opacity: 0.6;
+}
