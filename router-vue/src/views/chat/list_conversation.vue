@@ -82,6 +82,7 @@ export default {
         chatPeopleDiv.appendChild(chatTimeDiv);
         chatPeopleDiv.onclick = () => {
           localStorage.setItem("conversationName", conversation.conversationName);
+          sessionStorage.setItem("Type", conversation.type);
           this.loadConversationDetails(conversation.id);
         };
         container.appendChild(chatPeopleDiv);

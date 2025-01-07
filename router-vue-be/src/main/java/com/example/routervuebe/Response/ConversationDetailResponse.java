@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.relational.core.sql.In;
 
 import java.time.LocalDateTime;
 
@@ -16,4 +17,5 @@ public class ConversationDetailResponse {
     private String messageType;
     private LocalDateTime createAt;
     private String username;
+    private Integer memberCode;
 }

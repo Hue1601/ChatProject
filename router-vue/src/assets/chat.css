@@ -169,3 +169,9 @@ margin-top: 0;
   background: #0d6efd;
   color: wheat;
 }
+
+/* create-conersation */
+.disable{
+  pointer-events: none;
+  opacity: 0.6;
+}

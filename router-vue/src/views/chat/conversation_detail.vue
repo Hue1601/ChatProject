@@ -43,8 +43,10 @@ export default {
     return {
       messages: [],
       newMessage: "",
-      loginUsername:sessionStorage.getItem("username"),
-      activeConversationName: localStorage.getItem("conversationName").replace(/"/g,""),
+      userId: sessionStorage.getItem("ownerCode"),
+      activeConversationName: localStorage
+        .getItem("conversationName")
+        .replace(/"/g, ""),
 
       activeConversationId: this.conversationId,
     };
@@ -52,18 +54,20 @@ export default {
 
   methods: {
     async getConversationDetail() {
-
       try {
-         const token = localStorage.getItem("token");
-        const response = await axios.get(`${baseUrl}/${this.activeConversationId}`,{
-            headers:{
-              Authorization :`Bearer ${token}`,
-            }
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `${baseUrl}/${this.activeConversationId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
-        if (response.status === 200 ) {
+        if (response.status === 200) {
           this.messages = response.data;
+         console.log("response.data"+ JSON.stringify(response.data))
           this.renderConversationDetail();
         }
       } catch (error) {
@@ -73,28 +77,35 @@ export default {
 
     renderConversationDetail() {
       const listMessage = document.getElementById("listMessage");
-      listMessage.innerHTML = ""; 
+      const type = sessionStorage.getItem("Type");
+  console.log("Type" +type)
 
+      listMessage.innerHTML = "";
+ 
       this.messages.forEach((message) => {
         // Check if the message is sent by the logged-in user
-        const isSendMessage = message.username === this.loginUsername;
-
+        console.log("memberCode"+message.memberCode)
+         console.log(" this.userId"+ this.userId)
+        const isSendMessage = message.memberCode === Number(this.userId);
+        console.log("send"+isSendMessage)
         const div = document.createElement("div");
         div.className = isSendMessage ? "message_send" : "message_receive";
 
         const borderName = document.createElement("div");
         // If the message is received (not sent by the logged-in user), show the avatar
-        if (!isSendMessage) {
+        if (!isSendMessage ) {
           const img = document.createElement("img");
           img.className = "avatar_member";
           img.src = "https://ptetutorials.com/images/user-profile.png";
 
+            if(type === 'group'){
           const username = document.createElement("span");
           username.className = "member_name";
           username.innerHTML = message.username;
-
+           borderName.appendChild(username);
+            }
           div.appendChild(img);
-          borderName.appendChild(username);
+         
         }
 
         const receivedBubble = document.createElement("div");
@@ -128,55 +139,54 @@ export default {
     },
     formatTime(localTime) {
       const date = new Date(localTime);
-      const hours = String(date.getHours()).padStart(2, '0');
-      const minutes =String(date.getMinutes()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
       return `${hours}:${minutes}`;
     },
 
-    async sendMessage() {
-      if (!this.newMessage.trim() || !this.activeConversationId) return;
+    // async sendMessage() {
+    //   if (!this.newMessage.trim() || !this.activeConversationId) return;
 
-      try {
-        const newMessageData = {
-          messagetext: this.newMessage,
-          messagetype: "text",
-          timestamp: new Date().toISOString(),
-          iduser: {
-            id: this.$store.state.user.id,
-            username: this.loginUsername,
-          },
-          conversation: {
-            id: this.activeConversationId,
-            conversationname: this.activeConversationName,
-          }
-        };
-        const response = await axios.post(
-          `${baseUrl}/send-message`,
-          newMessageData
-        );
+    //   try {
+    //     const newMessageData = {
+    //       messagetext: this.newMessage,
+    //       messagetype: "text",
+    //       timestamp: new Date().toISOString(),
+    //       iduser: {
+    //         id: this.$store.state.user.id,
+    //         username: this.loginUsername,
+    //       },
+    //       conversation: {
+    //         id: this.activeConversationId,
+    //         conversationname: this.activeConversationName,
+    //       }
+    //     };
+    //     const response = await axios.post(
+    //       `${baseUrl}/send-message`,
+    //       newMessageData
+    //     );
 
-        if (response.status === 200 && response.data) {
-          this.messages.push(response.data); // Thêm tin nhắn vào mảng messages
-          this.newMessage = "";
+    //     if (response.status === 200 && response.data) {
+    //       this.messages.push(response.data); // Thêm tin nhắn vào mảng messages
+    //       this.newMessage = "";
 
-          this.renderConversationDetail(); // Cập nhật giao diện
-          this.scrollToBottom(); // Cuộn xuống cuối danh sách tin nhắn
-        }
-      } catch (error) {
-        console.error("Error sending message:", error);
-      }
-    },
+    //       this.renderConversationDetail(); // Cập nhật giao diện
+    //       this.scrollToBottom(); // Cuộn xuống cuối danh sách tin nhắn
+    //     }
+    //   } catch (error) {
+    //     console.error("Error sending message:", error);
+    //   }
+    // },
     scrollToBottom() {
       this.$nextTick(() => {
         const listMessage = document.getElementById("listMessage");
         listMessage.scrollTop = listMessage.scrollHeight;
       });
-    }
+    },
   },
-  mounted(){
-this.getConversationDetail();
-  }
-  
+  mounted() {
+    this.getConversationDetail();
+  },
 };
 </script>
 

@@ -108,6 +108,7 @@ export default {
 
     async GetListUser() {
       try {
+        const ownerCode = sessionStorage.getItem("ownerCode");
         const body = document.getElementById("listUser");
         const response = await axios.get(`${baseUrl}/list`);
 
@@ -116,9 +117,6 @@ export default {
 
           this.users.forEach((user) => {
             const tr = document.createElement("tr");
-
-            const id = document.createElement("td");
-            id.innerText = user.id;
 
             const username = document.createElement("td");
             username.innerText = user.username;
@@ -136,8 +134,11 @@ export default {
             });
 
             borderCheckbox.appendChild(checkbox);
+            if (user.id === Number(ownerCode)) {
+              username.className = "disable";
+              checkbox.classList.add("disable");
+            }
 
-            tr.appendChild(id);
             tr.appendChild(username);
             tr.appendChild(borderCheckbox);
 
@@ -165,7 +166,6 @@ export default {
         this.selectedUsers = event.target.checked ? [user] : [];
       }
       console.log("Selected Users:", JSON.stringify(this.selectedUsers));
-     
 
       sessionStorage.setItem(
         "title",
@@ -178,33 +178,34 @@ export default {
       );
     },
 
-   
     async createConversation() {
-  const chatType = sessionStorage.getItem("chatType");
-  const title = sessionStorage.getItem("title");
-  const userCode = sessionStorage.getItem("userCode");
+      const chatType = sessionStorage.getItem("chatType");
+      const title = sessionStorage.getItem("title");
+      const userCode = sessionStorage.getItem("userCode");
 
-  const ownerCode = sessionStorage.getItem("id");
+      const ownerCode = sessionStorage.getItem("ownerCode");
 
-  try {
-    const payload = {
-      name: title,
-      type: chatType,
-      member: [Number(ownerCode), Number(userCode)],
-    };
+      try {
+        const payload = {
+          name: title,
+          type: chatType,
+          member: [Number(ownerCode), Number(userCode)],
+        };
 
-    const response = await axios.post(`${baseUrl}/create-conversation`, payload);
+        const response = await axios.post(
+          `${baseUrl}/create-conversation`,
+          payload
+        );
 
-    if (response.status === 200) {
-      alert("Conversation created successfully!");
-      this.$router.push("/list_conversation");
-    }
-  } catch (error) {
-    console.error("Error creating conversation:", error.response || error);
-    alert(`Error: ${error.message}`);
-  }
-}
-
+        if (response.status === 200) {
+          alert("Conversation created successfully!");
+          this.$router.push("/list_conversation");
+        }
+      } catch (error) {
+        console.error("Error creating conversation:", error.response || error);
+        alert(`Error: ${error.message}`);
+      }
+    },
   },
   mounted() {
     this.GetListUser();

@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface MessagesRepo extends JpaRepository<Messages,Integer> {
-    @Query("SELECT new com.example.routervuebe.Response.ConversationDetailResponse(m.messagetext, m.messagetype, m.timestamp, u.username) " +
+    @Query("SELECT new com.example.routervuebe.Response.ConversationDetailResponse(m.messagetext, m.messagetype, m.timestamp, u.username,u.id) " +
             "FROM Messages m " +
             "JOIN m.iduser u " +
             "WHERE m.conversation.id = :conversationId")
