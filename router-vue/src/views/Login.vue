@@ -54,16 +54,14 @@ export default {
 
         if (response.status == 200) {
           const token = response.data.token;
-          console.log("Token:", token);
-   
-          // Lưu token vào localStorage
+
           localStorage.setItem("token", token);
-          sessionStorage.setItem("ownerCode", response.data.id);
+          localStorage.setItem("ownerCode", response.data.id);
           this.$router.push("/verify");
         }
       } 
       catch (err) {
-      this.errorMessage = err.response.data ;
+      this.errorMessage = err.errorMessage ;
 
       }
     },

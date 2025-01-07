@@ -52,6 +52,7 @@
 <script>
 import CompHeader from "../../components/CompHeader.vue";
 import axios from "axios";
+import { chatState } from "/newwave/ChatProject/router-vue/src/JS/chat.js";
 const baseUrl = "http://localhost:8080/api";
 export default {
   name: "create",
@@ -67,7 +68,8 @@ export default {
   },
   methods: {
     setChatType(type) {
-      sessionStorage.setItem("chatType", type);
+      // sessionStorage.setItem("chatType", type);
+      chatState.chatType = type;
       var btnPrivate = document.getElementById("btnPrivate");
       var btnGroup = document.getElementById("btnGroup");
       var tableListUser = document.getElementById("tableListUser");
@@ -108,7 +110,7 @@ export default {
 
     async GetListUser() {
       try {
-        const ownerCode = sessionStorage.getItem("ownerCode");
+        const ownerCode = localStorage.getItem("ownerCode");
         const body = document.getElementById("listUser");
         const response = await axios.get(`${baseUrl}/list`);
 
@@ -150,7 +152,7 @@ export default {
       }
     },
     async handleCheckbox(event, user) {
-      const chatType = sessionStorage.getItem("chatType");
+      const chatType = chatState.chatType;
       if (chatType === "private") {
         const checkboxes = document.querySelectorAll(".checkboxs");
 
@@ -160,30 +162,17 @@ export default {
             cb.checked = false;
           }
         });
-        // this.selectedUsers.remove(user);
-        // this.selectedUsers.push(user)
-
         this.selectedUsers = event.target.checked ? [user] : [];
       }
-      console.log("Selected Users:", JSON.stringify(this.selectedUsers));
-
-      sessionStorage.setItem(
-        "title",
-        JSON.stringify(this.selectedUsers[0].username)
-      );
-
-      sessionStorage.setItem(
-        "userCode",
-        JSON.stringify(this.selectedUsers[0].id)
-      );
+      chatState.title =  JSON.stringify(this.selectedUsers[0].username)
+      chatState.memberCode = JSON.stringify(this.selectedUsers[0].id)
     },
 
     async createConversation() {
-      const chatType = sessionStorage.getItem("chatType");
-      const title = sessionStorage.getItem("title");
-      const userCode = sessionStorage.getItem("userCode");
-
-      const ownerCode = sessionStorage.getItem("ownerCode");
+      const chatType = chatState.chatType;
+      const title = chatState.title;
+      const userCode = chatState.memberCode;
+      const ownerCode = localStorage.getItem("ownerCode");
 
       try {
         const payload = {
@@ -198,12 +187,10 @@ export default {
         );
 
         if (response.status === 200) {
-          alert("Conversation created successfully!");
           this.$router.push("/list_conversation");
         }
       } catch (error) {
         console.error("Error creating conversation:", error.response || error);
-        alert(`Error: ${error.message}`);
       }
     },
   },

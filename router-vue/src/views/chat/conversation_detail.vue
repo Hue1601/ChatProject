@@ -34,6 +34,8 @@
 
 <script>
 import axios from "axios";
+import { chatState } from "/newwave/ChatProject/router-vue/src/JS/chat.js";
+
 const baseUrl = " http://localhost:8080/api/detail-conversation";
 
 export default {
@@ -43,11 +45,8 @@ export default {
     return {
       messages: [],
       newMessage: "",
-      userId: sessionStorage.getItem("ownerCode"),
-      activeConversationName: localStorage
-        .getItem("conversationName")
-        .replace(/"/g, ""),
-
+      userId: localStorage.getItem("ownerCode"),
+      activeConversationName: chatState.conversationName.replace(/"/g, ""),
       activeConversationId: this.conversationId,
     };
   },
@@ -67,7 +66,6 @@ export default {
 
         if (response.status === 200) {
           this.messages = response.data;
-         console.log("response.data"+ JSON.stringify(response.data))
           this.renderConversationDetail();
         }
       } catch (error) {
@@ -77,35 +75,31 @@ export default {
 
     renderConversationDetail() {
       const listMessage = document.getElementById("listMessage");
-      const type = sessionStorage.getItem("Type");
-  console.log("Type" +type)
-
+      const type = chatState.chatType;
+  
       listMessage.innerHTML = "";
- 
+
       this.messages.forEach((message) => {
         // Check if the message is sent by the logged-in user
-        console.log("memberCode"+message.memberCode)
-         console.log(" this.userId"+ this.userId)
         const isSendMessage = message.memberCode === Number(this.userId);
-        console.log("send"+isSendMessage)
+
         const div = document.createElement("div");
         div.className = isSendMessage ? "message_send" : "message_receive";
 
         const borderName = document.createElement("div");
         // If the message is received (not sent by the logged-in user), show the avatar
-        if (!isSendMessage ) {
+        if (!isSendMessage) {
           const img = document.createElement("img");
           img.className = "avatar_member";
           img.src = "https://ptetutorials.com/images/user-profile.png";
 
-            if(type === 'group'){
-          const username = document.createElement("span");
-          username.className = "member_name";
-          username.innerHTML = message.username;
-           borderName.appendChild(username);
-            }
+          if (type === "group") {
+            const username = document.createElement("span");
+            username.className = "member_name";
+            username.innerHTML = message.username;
+            borderName.appendChild(username);
+          }
           div.appendChild(img);
-         
         }
 
         const receivedBubble = document.createElement("div");
@@ -186,6 +180,7 @@ export default {
   },
   mounted() {
     this.getConversationDetail();
+    console.log(chatState);
   },
 };
 </script>
