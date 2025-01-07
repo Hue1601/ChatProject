@@ -17,6 +17,7 @@
 <script>
 import CompHeader from "../../components/CompHeader.vue";
 import axios from "axios";
+import { chatState } from "/newwave/ChatProject/router-vue/src/JS/chat.js";
 const baseUrl = "http://localhost:8080/api/list-conversation";
 
 export default {
@@ -31,14 +32,13 @@ export default {
     async getListConversation() {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get( `${baseUrl}`,{
-            headers: {
+        const response = await axios.get(`${baseUrl}`, {
+          headers: {
             Authorization: `Bearer ${token}`,
           },
-          }
-        );
-       
-        if (response.status === 200 ) {
+        });
+
+        if (response.status === 200) {
           this.conversations = response.data;
           this.renderConversations();
         }
@@ -65,7 +65,7 @@ export default {
 
         const span = document.createElement("span");
         span.className = "conversation_name";
-        span.innerText = (conversation.conversationName).replace(/"/g, "");
+        span.innerText = conversation.conversationName.replace(/"/g, "");
 
         const p = document.createElement("p");
         p.innerText = "last message";
@@ -81,8 +81,9 @@ export default {
         chatPeopleDiv.appendChild(chatIbDiv);
         chatPeopleDiv.appendChild(chatTimeDiv);
         chatPeopleDiv.onclick = () => {
-          localStorage.setItem("conversationName", conversation.conversationName);
-          sessionStorage.setItem("Type", conversation.type);
+          chatState.conversationName = conversation.conversationName;
+          chatState.chatType = conversation.type;
+
           this.loadConversationDetails(conversation.id);
         };
         container.appendChild(chatPeopleDiv);

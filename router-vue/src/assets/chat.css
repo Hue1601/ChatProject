@@ -169,7 +169,13 @@ margin-top: 0;
   background: #0d6efd;
   color: wheat;
 }
-
+.container {
+  width: 25%;
+  margin-top: 10px;
+}
+h2 {
+  text-align: center;
+}
 /* create-conersation */
 .disable{
   pointer-events: none;
