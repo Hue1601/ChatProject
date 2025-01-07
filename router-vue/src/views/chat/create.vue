@@ -110,7 +110,7 @@ export default {
 
     async GetListUser() {
       try {
-        const ownerCode = chatState.ownerCode;
+        const ownerCode = localStorage.getItem("ownerCode");
         const body = document.getElementById("listUser");
         const response = await axios.get(`${baseUrl}/list`);
 
@@ -172,7 +172,7 @@ export default {
       const chatType = chatState.chatType;
       const title = chatState.title;
       const userCode = chatState.memberCode;
-      const ownerCode = chatState.ownerCode;
+      const ownerCode = localStorage.getItem("ownerCode");
 
       try {
         const payload = {

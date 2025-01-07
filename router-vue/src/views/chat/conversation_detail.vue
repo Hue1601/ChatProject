@@ -45,7 +45,7 @@ export default {
     return {
       messages: [],
       newMessage: "",
-      userId: chatState.ownerCode,
+      userId: localStorage.getItem("ownerCode"),
       activeConversationName: chatState.conversationName.replace(/"/g, ""),
       activeConversationId: this.conversationId,
     };
@@ -76,9 +76,11 @@ export default {
     renderConversationDetail() {
       const listMessage = document.getElementById("listMessage");
       const type = chatState.chatType;
+  
       listMessage.innerHTML = "";
 
       this.messages.forEach((message) => {
+        // Check if the message is sent by the logged-in user
         const isSendMessage = message.memberCode === Number(this.userId);
 
         const div = document.createElement("div");

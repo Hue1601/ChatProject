@@ -24,7 +24,7 @@
 
 <script>
 import axios from "axios";
-import { chatState } from '/newwave/ChatProject/router-vue/src/JS/chat.js';
+
 const baseUrl = "http://localhost:8080/api/login";
 
 export default {
@@ -40,7 +40,7 @@ export default {
     };
   },
   methods: {
-  async login() {
+    async login() {
       this.errorMessage = "";
       const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value.trim();
@@ -49,15 +49,20 @@ export default {
         return;
       }
       try {
-        let response = await axios.post(baseUrl, this.users);
+        // Gửi yêu cầu API với thông tin username và password
+        const response = await axios.post(baseUrl, this.users);
 
-        if (response.status === 200) {
-          localStorage.setItem("token", response.data.token)
-          chatState.ownerCode = response.data.id;
+        if (response.status == 200) {
+          const token = response.data.token;
+
+          localStorage.setItem("token", token);
+          localStorage.setItem("ownerCode", response.data.id);
           this.$router.push("/verify");
         }
-      } catch (err) {
-        this.errorMessage = err.message;
+      } 
+      catch (err) {
+      this.errorMessage = err.errorMessage ;
+
       }
     },
   },
@@ -65,5 +70,11 @@ export default {
 </script>
 
 <style scoped>
-
+.container {
+  width: 25%;
+  margin-top: 10px;
+}
+h2 {
+  text-align: center;
+}
 </style>
