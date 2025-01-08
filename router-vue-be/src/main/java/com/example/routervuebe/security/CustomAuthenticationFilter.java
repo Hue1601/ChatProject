@@ -65,6 +65,13 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
                     return;
 
                 }
+            }else {
+                // Nếu không có Authorization header, trả về lỗi
+                if (!isLogin(request)) { // Trừ trường hợp endpoint là login
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write(objectMapper.writeValueAsString(MessageError.MISSING_TOKEN));
+                    return;
+                }
             }
 
         filterChain.doFilter(request, response);

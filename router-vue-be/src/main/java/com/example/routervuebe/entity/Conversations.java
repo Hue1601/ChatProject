@@ -3,6 +3,7 @@ package com.example.routervuebe.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -20,6 +21,8 @@ public class Conversations {
     @Column(name = "type")
     private String type;
 
+    @Column(name="create_at")
+    private LocalDateTime createAt;
     @OneToMany(mappedBy = "conversationid")
     private List<UserConversations> userConversations;
 }

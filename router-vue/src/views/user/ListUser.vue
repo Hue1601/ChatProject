@@ -66,7 +66,7 @@
 <script>
 import CompHeader from "../../components/CompHeader.vue";
 import axios from 'axios';
- //const baseUrl = "http://localhost:3000/users";
+
  const baseUrl = "http://localhost:8080/api";
 export default {
   name: "list-user",
@@ -75,6 +75,7 @@ export default {
       users: [],
       // username:'',
       search:'',
+      token:localStorage.getItem("token"),
      currentPage: 1,
       totalPages: 1,
       pageSize: 8,
@@ -84,10 +85,7 @@ export default {
     CompHeader,
   },
   methods: {
-    // handleSearch(value){
-    //   console.log("handling search event" , value);
-    //   this.users = value;
-    // },
+
     async SearchUser() {
       console.log('search');
       try {
@@ -100,9 +98,14 @@ export default {
       }
     },
       async GetListUser(page = 1) {
+   
       try {
         const response = await axios.get(`${baseUrl}/pagination`, {
           params: { p: page - 1 } 
+        },{
+           headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
         });
         this.users = response.data.users;
         this.totalPages = response.data.totalPages;

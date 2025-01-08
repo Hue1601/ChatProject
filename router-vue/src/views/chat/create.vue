@@ -52,6 +52,7 @@ export default {
     return {
       users: [],
       search: "",
+      token:localStorage.getItem("token")
       
     };
   },
@@ -81,10 +82,15 @@ export default {
 
     async GetListUser() {
       try {
+  
         const ownerCode = localStorage.getItem("ownerCode");
         const body = document.getElementById("listUser");
           body.innerHTML = "";
-        const response = await axios.get(`${baseUrl}/list`);
+        const response = await axios.get(`${baseUrl}/list`,{
+           headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        });
 
         if (response.status == 200) {
           this.users = response.data;
@@ -157,7 +163,6 @@ export default {
       const chatType = chatState.chatType;
       const title = chatState.title;
       const userCode = chatState.memberCode;
-          console.log("userCode " + userCode);
       const ownerCode = localStorage.getItem("ownerCode");
 
       try {
@@ -170,7 +175,9 @@ export default {
 
           const response = await axios.post(
             `${baseUrl}/create-conversation`,
-            payload
+            payload,{headers: {
+            Authorization: `Bearer ${this.token}`,
+          }},
           );
 
           if (response.status === 200) {

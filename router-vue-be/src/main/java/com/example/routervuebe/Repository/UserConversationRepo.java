@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface UserConversationRepo extends JpaRepository<UserConversations, Integer> {
 
-@Query("SELECT new com.example.routervuebe.Response.ConversationResponse(c.id, c.conversationName, c.type) " +
+@Query("SELECT new com.example.routervuebe.Response.ConversationResponse(c.id, c.conversationName, c.type,c.createAt) " +
         "FROM Conversations c " +
         "JOIN c.userConversations uc " +
         "JOIN uc.userid u " +

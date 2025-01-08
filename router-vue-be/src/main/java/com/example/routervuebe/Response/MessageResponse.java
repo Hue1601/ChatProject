@@ -7,14 +7,15 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class ConversationResponse {
-    private int id;
-    private String conversationName;
-    private String type;
-    private LocalDateTime createdAt;
+public class MessageResponse {
+    private String messageText;
+    private String messageType;
+    private LocalDateTime timestamp;
 
 }
+

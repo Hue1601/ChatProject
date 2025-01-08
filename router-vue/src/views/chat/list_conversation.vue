@@ -75,7 +75,7 @@ export default {
 
         const chatTimeDiv = document.createElement("div");
         chatTimeDiv.className = "chat_date";
-        chatTimeDiv.innerText = "11:11";
+        chatTimeDiv.innerText = this.formatTime(conversation.createdAt);
 
         chatPeopleDiv.appendChild(images);
         chatPeopleDiv.appendChild(chatIbDiv);
@@ -96,6 +96,13 @@ export default {
         params: { conversationId },
       });
     },
+    formatTime(time) {
+      const date = new Date(time)
+         const hours = date.getHours()
+      const minutes = date.getMinutes()
+      return `${hours} : ${minutes}`;
+    }
+
   },
   mounted() {
     this.getListConversation();
