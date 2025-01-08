@@ -1,8 +1,11 @@
 package com.example.routervuebe.controller;
 
+import com.example.routervuebe.Entity.Users;
 import com.example.routervuebe.Repository.ConversationsRepo;
 import com.example.routervuebe.Repository.UserConversationRepo;
+import com.example.routervuebe.Request.MessageRequest;
 import com.example.routervuebe.Response.ConversationResponse;
+import com.example.routervuebe.Response.MessageResponse;
 import com.example.routervuebe.service.ConversationService;
 import com.example.routervuebe.Entity.Conversations;
 import com.example.routervuebe.Entity.Messages;
@@ -14,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -29,11 +33,13 @@ public class ChatController {
     @Autowired
     private ConversationService conversationService;
 
+
     @PostMapping("/send-message")
-    public Messages sendMessage(@RequestBody Messages message) {
-        messagesRepo.save(message);
-        return message;
+    public ResponseEntity<?> sendMessage(@RequestBody MessageRequest request) {
+        MessageResponse message = conversationService.sendMessage(request);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
+
 
     @GetMapping("/list-conversation")
     public ResponseEntity<?> getConversationByUsername(HttpServletRequest request) {
@@ -41,14 +47,15 @@ public class ChatController {
         List<ConversationResponse> conversations = userConversationRepo.findConversationsByUsername(username);
         return ResponseEntity.ok(conversations);
     }
-//    http://localhost:8080/detail-conversation?id=1
+
+    //    http://localhost:8080/detail-conversation?id=1
 //    @GetMapping("/detail-conversation")
 //    public List<Messages> getConversationDetails(@RequestParam Integer id) {
 //        return messagesRepo.getConversationDetail(id);
 //    }
     @GetMapping("/detail-conversation/{conversationId}")
     public ResponseEntity<?> getConversationById(@PathVariable Integer conversationId) {
-            return ResponseEntity.ok(messagesRepo.getConversationDetail(conversationId));
+        return ResponseEntity.ok(messagesRepo.getConversationDetail(conversationId));
 
     }
 

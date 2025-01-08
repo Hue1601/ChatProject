@@ -2,15 +2,21 @@ package com.example.routervuebe.service;
 
 
 import com.example.routervuebe.Entity.Conversations;
+import com.example.routervuebe.Entity.Messages;
 import com.example.routervuebe.Entity.UserConversations;
 import com.example.routervuebe.Entity.Users;
 import com.example.routervuebe.Repository.ConversationsRepo;
+import com.example.routervuebe.Repository.MessagesRepo;
 import com.example.routervuebe.Repository.UserConversationRepo;
 import com.example.routervuebe.Repository.UserRepository;
+import com.example.routervuebe.Request.MessageRequest;
+import com.example.routervuebe.Response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.stereotype.Service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -26,6 +32,8 @@ public class ConversationService {
     @Autowired
     private UserConversationRepo userConversationRepo;
 
+    @Autowired
+    private MessagesRepo messagesRepo;
     public Conversations createConversation(String name, String type, List<Integer> member){
         Conversations conversation = new Conversations();
         conversation.setConversationName(name);
@@ -42,4 +50,25 @@ public class ConversationService {
         return conversation;
     }
 
+    public MessageResponse sendMessage(@RequestBody MessageRequest request) {
+
+        Users user = userRepo.findById(request.getUser())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Conversations conversation = conversationRepo.findById(request.getConversation())
+                .orElseThrow(() -> new RuntimeException("Conversation not found"));
+
+        Messages messages = new Messages();
+        messages.setMessagetext(request.getMessageText());
+        messages.setMessagetype(request.getMessageType());
+        messages.setTimestamp(LocalDateTime.now());
+        messages.setIduser(user);
+        messages.setConversation(conversation);
+
+        messagesRepo.save(messages);
+        return new MessageResponse(
+                messages.getMessagetext(),
+                messages.getMessagetype(),
+                messages.getTimestamp()
+        );
+    }
 }
