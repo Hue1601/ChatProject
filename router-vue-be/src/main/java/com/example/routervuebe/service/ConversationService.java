@@ -38,6 +38,7 @@ public class ConversationService {
         Conversations conversation = new Conversations();
         conversation.setConversationName(name);
         conversation.setType(type);
+        conversation.setCreateAt(LocalDateTime.now());
         conversationRepo.save(conversation);
         for (Integer userId : member) {
             Users user = userRepo.findById(userId)
