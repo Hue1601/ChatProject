@@ -36,7 +36,9 @@ const baseUrl = "http://localhost:8080/api";
 export default {
   name: "setting",
   data() {
-    return {};
+    return {
+      token:localStorage.getItem("token")
+    };
   },
   methods: {
     async genListMember() {
@@ -79,7 +81,11 @@ export default {
           member: [Number(ownerCode), ...userCodes],
         };
 
-        const response = await axios.post(`${baseUrl}/create-conversation`,payload);
+        const response = await axios.post(`${baseUrl}/create-conversation`,payload,{
+           headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        });
 
         if (response.status === 200) {
           this.$router.push("/list_conversation");
