@@ -181,3 +181,55 @@ h2 {
   pointer-events: none;
   opacity: 0.6;
 }
+
+/* setting conversation */
+.header_setup{
+  display: flex;
+}
+.border_img{
+  margin-right: 13px;
+  height: 80px;
+  width: 80px;
+}
+#title{
+  height: 35px;
+  width: 72%;
+   border: none;
+}
+.icon_back{
+  height: 35px;
+  width: 35px;
+}
+#listMemberSelected{
+  display: flex;
+}
+.member_profile{
+  margin-right: 10px;
+  text-align: center
+}
+.member_avatar{
+  width: 50px;
+  height: 50px;
+}
+.member_name{
+  width: 50.15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.border_camera{
+  width: 35px;
+  display: flex;
+  position: absolute;
+  margin-left: 14%;
+  margin-top: 16%;
+}
+.choose_image{
+  width: 85px;
+    display: flex
+}
+.header_setup{
+  display: flex;
+    height: 80px;
+    align-items: center
+}

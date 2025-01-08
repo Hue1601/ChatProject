@@ -61,6 +61,11 @@ const router = createRouter({
       name: 'user-update',
       component: () => import('../views/user/UpdateUser.vue')
     },
+    {
+      path: '/setting',
+      name: 'setting',
+      component: () => import('../views/chat/setting.vue')
+    },
   ]
 })
 

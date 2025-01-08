@@ -34,15 +34,7 @@
           </button>
         </div>
         <table class="table">
-          <tbody id="listUser">
-            <!-- <tr v-for="(item, index) in users" :key="index">
-                <td>{{ item.id }}</td>
-              <td>{{ item.username }}</td>
-              <td class="checkbox">
-                <input type="checkbox" @click="handleCheckbox($event)" id="checkbox" class="checkbox"/>
-              </td>
-            </tr> -->
-          </tbody>
+          <tbody id="listUser"></tbody>
         </table>
       </div>
     </div>
@@ -60,7 +52,7 @@ export default {
     return {
       users: [],
       search: "",
-      selectedUsers: [],
+      
     };
   },
   components: {
@@ -68,7 +60,6 @@ export default {
   },
   methods: {
     setChatType(type) {
-      // sessionStorage.setItem("chatType", type);
       chatState.chatType = type;
       var btnPrivate = document.getElementById("btnPrivate");
       var btnGroup = document.getElementById("btnGroup");
@@ -81,37 +72,18 @@ export default {
         btnPrivate.classList.add("active");
         btnGroup.classList.remove("active");
       }
-    },
-
-    //   async handleCheckbox(event) {
-    //   const chatType = sessionStorage.getItem("chatType");
-    //   if (chatType === "private") {
-    //     const checkboxes = document.querySelectorAll(".checkbox");
-
-    //     checkboxes.forEach((cb) => {
-    //       // Nếu checkbox hiện tại không phải checkbox được click, bỏ chọn nó
-    //       if (cb !== event.target) {
-    //         cb.checked = false;
-    //       }
-    //     });
-    //   }
-    // },
-
-    async SearchUser() {
-      try {
-        const response = await axios.get(`${baseUrl}/search`, {
-          params: { keyword: this.search },
-        });
-        this.users = response.data;
-      } catch (error) {
-        console.error("Search error:", error);
-      }
+       const checkboxes = document.querySelectorAll(".checkboxs");
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+    chatState.selectedUsers = [];
     },
 
     async GetListUser() {
       try {
         const ownerCode = localStorage.getItem("ownerCode");
         const body = document.getElementById("listUser");
+          body.innerHTML = "";
         const response = await axios.get(`${baseUrl}/list`);
 
         if (response.status == 200) {
@@ -153,6 +125,7 @@ export default {
     },
     async handleCheckbox(event, user) {
       const chatType = chatState.chatType;
+  
       if (chatType === "private") {
         const checkboxes = document.querySelectorAll(".checkboxs");
 
@@ -162,32 +135,49 @@ export default {
             cb.checked = false;
           }
         });
-        this.selectedUsers = event.target.checked ? [user] : [];
+        chatState.selectedUsers = event.target.checked ? [user] : [];
+        chatState.title = JSON.stringify(chatState.selectedUsers[0].username);
+        chatState.memberCode = JSON.stringify(chatState.selectedUsers[0].id);
+      }else if (chatType === "group") {
+     
+      if (event.target.checked) {
+        chatState.selectedUsers.push(user); // Add user to the list
+       
+      } else {
+        chatState.selectedUsers = chatState.selectedUsers.filter(
+          (selectedUser) => selectedUser.id !== user.id
+        ); // Remove user from the list
       }
-      chatState.title =  JSON.stringify(this.selectedUsers[0].username)
-      chatState.memberCode = JSON.stringify(this.selectedUsers[0].id)
+       chatState.memberCode = chatState.selectedUsers.map((selectedUser) => selectedUser.id);
+      }
+      console.log("select " + JSON.stringify(chatState.selectedUsers));
     },
 
     async createConversation() {
       const chatType = chatState.chatType;
       const title = chatState.title;
       const userCode = chatState.memberCode;
+          console.log("userCode " + userCode);
       const ownerCode = localStorage.getItem("ownerCode");
 
       try {
-        const payload = {
-          name: title,
-          type: chatType,
-          member: [Number(ownerCode), Number(userCode)],
-        };
+        if (chatType === "private") {
+          const payload = {
+            name: title,
+            type: chatType,
+            member: [Number(ownerCode), Number(userCode)],
+          };
 
-        const response = await axios.post(
-          `${baseUrl}/create-conversation`,
-          payload
-        );
+          const response = await axios.post(
+            `${baseUrl}/create-conversation`,
+            payload
+          );
 
-        if (response.status === 200) {
-          this.$router.push("/list_conversation");
+          if (response.status === 200) {
+            this.$router.push("/list_conversation");
+          }
+        } else {
+          this.$router.push("/setting");
         }
       } catch (error) {
         console.error("Error creating conversation:", error.response || error);
