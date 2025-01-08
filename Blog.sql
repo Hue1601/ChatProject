@@ -16,7 +16,8 @@ Create table Users(
 Create table Conversations(
    ID int  IDENTITY(1,1) PRIMARY KEY,
    ConversationName  nvarchar(255),
-   type varchar(10)
+   type varchar(10),
+   create_at datetime
 )
 CREATE TABLE UserConversations(
    ID INT IDENTITY(1,1) PRIMARY KEY, 
@@ -67,4 +68,53 @@ Create table Notifications(
    ISRead bit
 )
                                                                                                                               
+INSERT INTO Users (Username, Pass, GioiTinh, DiaChi, SDT,Email) 
+VALUES
+('huept', '1601', N'Nữ', N'Thanh Hóa', '0336450133','hueptph36756@fpt.edu.vn'),
+('tuannq', '0000', N'Nam', N'Hà Nội', '0336434795','huethipham1601@gmail.com'),
+ ('vanlt', '0000', N'Nam', N'Hà Nội', '0336434795','phamthihue3340@gmail.com')
 
+-- Insert a conversation (assuming an individual chat for now)
+INSERT INTO Conversations (ConversationName, type,create_at) 
+VALUES ('Chat between User1 and User2', 'private',GETDATE());
+
+INSERT INTO Conversations (ConversationName, type,create_at) 
+VALUES ('Group chat', 'group',GETDATE());
+
+-- Map users to this conversation
+INSERT INTO UserConversations (UserID, ConversationID) 
+VALUES (1, 1), (2, 1);
+INSERT INTO UserConversations (UserID, ConversationID) 
+VALUES  (2, 2),(3,2);
+
+-- Insert messages into the conversation
+INSERT INTO Messages (MessageText, MessageType, Timestamp, IdConversations, IdUser) 
+VALUES 
+('Hello, how are you?', 'text', GETDATE(), 1, 1),
+('I am fine, thank you!', 'text', GETDATE(), 1, 2);
+
+INSERT INTO Messages (MessageText, MessageType, Timestamp, IdConversations, IdUser) 
+VALUES 
+('hi, how are you?', 'text', GETDATE(), 2, 1),
+('Reply', 'text', GETDATE(), 2, 2),
+('Im fine and you', 'text', GETDATE(), 2, 1);
+
+INSERT INTO Messages (MessageText, MessageType, Timestamp, IdConversations, IdUser) 
+VALUES 
+('happy new year', 'text', GETDATE(), 4, 2),
+
+SELECT C.* FROM Conversations C 
+JOIN UserConversations UC ON C.ID = UC.ConversationID 
+JOIN Users U ON UC.UserID = U.ID 
+WHERE U.Username = 'huept';
+select * from Users
+select * from conversations
+select * from UserConversations
+select * from Messages where Messages.IdConversations = 1
+drop table Notifications
+drop table Attrachment
+drop table Messages
+drop table UserConversations
+drop table Conversations
+drop table Users
+drop table OTP
