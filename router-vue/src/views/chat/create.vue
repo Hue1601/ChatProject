@@ -45,7 +45,7 @@
 import CompHeader from "../../components/CompHeader.vue";
 import axios from "axios";
 import { chatState } from "/newwave/ChatProject/router-vue/src/JS/chat.js";
-const baseUrl = "http://localhost:8080/api/chat";
+const baseUrl = "http://localhost:8080/api";
 export default {
   name: "create",
   data() {
@@ -87,7 +87,7 @@ export default {
         const body = document.getElementById("listUser");
         body.innerHTML = "";
         
-        const response = await axios.get(`${baseUrl}/list`, {
+        const response = await axios.get(`${baseUrl}/user/list`, {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
@@ -175,7 +175,7 @@ export default {
           };
 
           const response = await axios.post(
-            `${baseUrl}/create-conversation`,
+            `${baseUrl}/chat/create-conversation`,
             payload,
             {
               headers: {

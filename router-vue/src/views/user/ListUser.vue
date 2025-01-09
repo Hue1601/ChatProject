@@ -19,7 +19,6 @@
             <th scope="col">Username</th>
             <th scope="col">SDT</th>
             <th scope="col">Giới tính</th>
-            <th scope="col">Địa chỉ</th>
             <th scope="col">Hành động</th>
           </tr>
         </thead>
@@ -29,7 +28,6 @@
             <td>{{ item.username }}</td>
             <td>{{ item.sdt }}</td>
             <td>{{ item.gioitinh }}</td>
-            <td>{{ item.diachi }}</td>
             <td>
               <RouterLink :to="`/user/update/${item.id}`" class="btn btn-outline-primary">
               Update</RouterLink>
