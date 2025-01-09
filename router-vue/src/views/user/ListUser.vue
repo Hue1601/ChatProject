@@ -11,16 +11,14 @@
         <RouterLink to="/user/add" class="btn btn-outline-primary">Add</RouterLink> 
     </div>
 
-    <div class="card-header">
+    <div class="border_table">
       <table class="table" >
         <thead>
           <tr>
             <th scope="col">STT</th>
             <th scope="col">Username</th>
-            <th scope="col">Password</th>
             <th scope="col">SDT</th>
             <th scope="col">Giới tính</th>
-            <th scope="col">Địa chỉ</th>
             <th scope="col">Hành động</th>
           </tr>
         </thead>
@@ -28,10 +26,8 @@
           <tr v-for="(item,index) in users" :key="index">
             <td>{{ index + 1 + ((currentPage - 1) * pageSize) }}</td>
             <td>{{ item.username }}</td>
-            <td>{{ item.pass }}</td>
             <td>{{ item.sdt }}</td>
             <td>{{ item.gioitinh }}</td>
-            <td>{{ item.diachi }}</td>
             <td>
               <RouterLink :to="`/user/update/${item.id}`" class="btn btn-outline-primary">
               Update</RouterLink>
@@ -66,8 +62,8 @@
 <script>
 import CompHeader from "../../components/CompHeader.vue";
 import axios from 'axios';
- //const baseUrl = "http://localhost:3000/users";
- const baseUrl = "http://localhost:8080/api";
+
+ const baseUrl = "http://localhost:8080/api/user";
 export default {
   name: "list-user",
   data() {
@@ -75,19 +71,18 @@ export default {
       users: [],
       // username:'',
       search:'',
+      token:localStorage.getItem("token"),
      currentPage: 1,
       totalPages: 1,
       pageSize: 8,
+      
     };
   },
   components: {
     CompHeader,
   },
   methods: {
-    // handleSearch(value){
-    //   console.log("handling search event" , value);
-    //   this.users = value;
-    // },
+
     async SearchUser() {
       console.log('search');
       try {
@@ -99,18 +94,24 @@ export default {
         console.error("Search error:", error);
       }
     },
-      async GetListUser(page = 1) {
-      try {
-        const response = await axios.get(`${baseUrl}/pagination`, {
-          params: { p: page - 1 } 
-        });
-        this.users = response.data.users;
-        this.totalPages = response.data.totalPages;
-        this.currentPage = response.data.currentPage + 1; 
-      } catch (error) {
-        console.error(error);
-      }
-    },
+    
+    async GetListUser(page = 1) {
+  try {
+    console.log("token " + this.token)
+    const response = await axios.get(`${baseUrl}/pagination`, {
+      params: { p: page - 1 },
+      headers: {
+        Authorization: `Bearer ${this.token}`, // Đảm bảo token được truyền vào header đúng cách
+      },
+    });
+    this.users = response.data.users;
+    this.totalPages = response.data.totalPages;
+    this.currentPage = response.data.currentPage + 1; 
+  } catch (error) {
+    console.error(error);
+  }
+},
+
     async DeleteUser(itemDelete) {
    if (confirm('Are you sure you want to delete this user?')) {
         try {

@@ -1,17 +1,20 @@
 package com.example.routervuebe.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name="messages")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Messages {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 private Integer id;
-
     private String messagetext;
     private String messagetype;
     private LocalDateTime timestamp;
@@ -21,65 +24,6 @@ private Integer id;
     private Users iduser;
 
     @ManyToOne
-    @JoinColumn(name="idconversations")
-    private Conversations idconversations;
-    public Messages() {
-    }
-
-    public Messages(Integer id, String messagetext, String messagetype, LocalDateTime timestamp, Users iduser, Conversations idconversations) {
-        this.id = id;
-        this.messagetext = messagetext;
-        this.messagetype = messagetype;
-        this.timestamp = timestamp;
-        this.iduser = iduser;
-        this.idconversations = idconversations;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getMessagetext() {
-        return messagetext;
-    }
-
-    public void setMessagetext(String messagetext) {
-        this.messagetext = messagetext;
-    }
-
-    public String getMessagetype() {
-        return messagetype;
-    }
-
-    public void setMessagetype(String messagetype) {
-        this.messagetype = messagetype;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public Users getIduser() {
-        return iduser;
-    }
-
-    public void setIduser(Users iduser) {
-        this.iduser = iduser;
-    }
-
-    public Conversations getIdconversations() {
-        return idconversations;
-    }
-
-    public void setIdconversations(Conversations idconversations) {
-        this.idconversations = idconversations;
-    }
+    @JoinColumn(name = "idconversations")
+    private Conversations conversation;
 }

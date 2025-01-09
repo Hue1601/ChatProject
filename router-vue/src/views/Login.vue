@@ -1,95 +1,74 @@
 <template>
   <div class="container">
     <h2>ĐĂNG NHẬP</h2>
-    <form @submit.prevent="login">
-      <div class="form-outline mb-4">
-        <label class="form-label" for="username">Account</label>
-        <input id="username" type="text" class="form-control" v-model="users.username" />
-      </div>
 
-      <div class="form-outline mb-4">
-        <label class="form-label" for="password">Password</label>
-        <input id="password" type="password" class="form-control" v-model="users.pass" />
-      </div>
+    <div class="form-outline mb-4">
+      <label class="form-label" >Account</label>
+      <input id="username" type="text" class="form-control" v-model="users.username" />
+    </div>
 
-      <div class="row mb-4">
-        <div class="col d-flex justify-content-center">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" v-model="rememberMe" />
-            <label class="form-check-label">Remember me</label>
-          </div>
-        </div>
+    <div class="form-outline mb-4">
+      <label class="form-label">Password</label>
+      <input id="password" type="password" class="form-control" v-model="users.password" />
+    </div>
 
-        <div class="col">
-          <a href="#!">Forgot password?</a>
-        </div>
-      </div>
-
-      <button type="submit" class="btn btn-primary btn-block mb-4" :disabled="loading" style="margin-left:33%">
-        <span v-if="loading">Logging in...</span>
-        <span v-else>ĐĂNG NHẬP</span>
-      </button> 
-
-      <div v-if="errorMessage" class="alert alert-danger" role="alert">
-        {{ errorMessage }}
-      </div>  
-    </form>
+    <button type="submit" class="btn btn-primary btn-block mb-4" style="margin-left: 33%" @click="login()"  >
+      <span>ĐĂNG NHẬP</span>
+    </button>
+   <a @click="register()" style="color: blue; margin-left: 80%;" >Đăng ký</a>
+    <div v-if="errorMessage" class="alert alert-danger" role="alert">
+      {{ errorMessage }}
+    </div>
   </div>
 </template>
+
 <script>
-import axios from 'axios';
- const baseUrl = "http://localhost:8080/api";
+import axios from "axios";
+
+const baseUrl = "http://localhost:8080/api/login";
+
 export default {
   name: "login",
   data() {
     return {
       users: {
         username: "",
-        pass: ""
+        password: "",
       },
       rememberMe: false,
-      loading: false,
-      errorMessage: ''
+      errorMessage: "",
     };
   },
- methods: {
-  async login() {
-     this.loading = true;
-    this.errorMessage = '';
-    try {
-      const response = await axios.post(`${baseUrl}/login`, this.users); 
-      if (response.status === 200) {
-         localStorage.setItem("username", response.data.username);
-          localStorage.setItem("pass", response.data.pass);
-          
-
-        const userLogin = {
-          id: response.data.id,
-          username: response.data.username
-        };
-        console.log("User: " , userLogin);
-        this.$store.commit('setUser', userLogin);
-
-        this.$router.push("/user");
-      } else {
-        this.errorMessage = "Incorrect account or password"; 
+  methods: {
+    async login() {
+      this.errorMessage = "";
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      if (!username || !password) {
+        this.errorMessage = "Please fill this form";
+        return;
       }
-    } catch (err) {
-      if (err.response && err.response.status === 401) {
-        this.errorMessage = "Incorrect account or password"; 
-      } else {
-        this.errorMessage = "Error, please try again"; 
+      try {
+        // Gửi yêu cầu API với thông tin username và password
+        const response = await axios.post(baseUrl, this.users);
+
+        if (response.status == 200) {
+          const token = response.data.token;
+
+          localStorage.setItem("token", token);
+          localStorage.setItem("ownerCode", response.data.id);
+          this.$router.push("/verify");
+        }
+      } 
+      catch (err) {
+      this.errorMessage = err.errorMessage ;
+
       }
-    } finally {
-      this.loading = false;
+    },
+    register(){
+      this.$router.push("/register");
     }
-  }
- },
-
-
-  mounted() {
-    console.log("mounted() called .......");
-  }
+  },
 };
 </script>
 

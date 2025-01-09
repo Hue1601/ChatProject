@@ -20,6 +20,11 @@ const router = createRouter({
       component: () => import('../views/Login.vue')
     },
     {
+      path: '/verify',
+      name: 'verify-otp',
+      component: () => import('../views/Login/VerifyOtp.vue')
+    },
+    {
       path: '/list_conversation',
       name: 'list_conversation',
       component: () => import('../views/chat/list_conversation.vue')
@@ -41,7 +46,11 @@ const router = createRouter({
       name: 'user-list',
       component: () => import('../views/user/ListUser.vue')
     },
-  
+    {
+      path: '/create',
+      name: 'create',
+      component: () => import('../views/chat/create.vue')
+    },
     {
       path: '/user/add',
       name: 'user-add',
@@ -52,6 +61,16 @@ const router = createRouter({
       name: 'user-update',
       component: () => import('../views/user/UpdateUser.vue')
     },
+    {
+      path: '/setting',
+      name: 'setting',
+      component: () => import('../views/chat/setting.vue')
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/login/register.vue')
+    }
   ]
 })
 

@@ -36,8 +36,8 @@
 
 <script>
 import axios from 'axios';
-//const baseUrl = "http://localhost:3000/users";
- const baseUrl = "http://localhost:8080/api";
+
+ const baseUrl = "http://localhost:8080/api/user";
 export default {
   name: 'update-user',
   data() {
@@ -56,7 +56,8 @@ export default {
         sdt: "",
         gioitinh: "",
         diachi: ""
-      }
+      },
+       token: localStorage.getItem("token"),
     };
   },
   mounted() {
@@ -68,7 +69,11 @@ export default {
       try {
         const id = this.$route.params.id;  
         // const response = await axios.get(`${baseUrl}/${id}`);
-        const response = await axios.get(`${baseUrl}/push-update-user/${id}`);
+        const response = await axios.get(`${baseUrl}/push-update-user/${id}`,{
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          },);
         this.users = response.data;
       } catch (error) {
         console.error(error);

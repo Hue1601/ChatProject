@@ -3,6 +3,9 @@ package com.example.routervuebe.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
 @Entity
 @Table(name="conversations")
@@ -12,30 +15,15 @@ public class Conversations {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String conversationname;
+    @Column(name = "conversationname")
+    private String conversationName;
 
+    @Column(name = "type")
+    private String type;
 
-    public Conversations() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getConversationname() {
-        return conversationname;
-    }
-
-    public void setConversationname(String conversationname) {
-        this.conversationname = conversationname;
-    }
-
-    public Conversations(Integer id, String conversationname) {
-        this.id = id;
-        this.conversationname = conversationname;
-    }
+    @Column(name="create_at")
+    private LocalDateTime createAt;
+    @OneToMany(mappedBy = "conversationid")
+    private List<UserConversations> userConversations;
 }
+

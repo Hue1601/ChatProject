@@ -4,16 +4,21 @@
     <div class="list_conversation">
       <div style="display: flex; margin-top: 10px">
         <input class="search_bar" placeholder="Search" v-model="searchQuery" />
-        <img src="/images/message-add.png" alt="Add" style="width: 40px; height:40px" />
+        <img
+          src="/images/message-add.png"
+          alt="Add"
+          style="width: 40px; height: 40px"
+        />
       </div>
-      <div class="body" ref="conversationListContainer"></div> 
+      <div class="body" id="conversationListContainer"></div>
     </div>
   </div>
 </template>
 <script>
 import CompHeader from "../../components/CompHeader.vue";
 import axios from "axios";
-const baseUrl = "http://localhost:8080/api";
+import { chatState } from "/newwave/ChatProject/router-vue/src/JS/chat.js";
+const baseUrl = "http://localhost:8080/api/chat/list-conversation";
 
 export default {
   name: "web-chat",
@@ -21,35 +26,33 @@ export default {
     CompHeader,
   },
   data() {
-    return {
-      // loginUsername: this.$store.state.user.username,
-      // activeConversationId: null,
-      // activeConversationName: null,
-      // newMessage: "",
-      // conversations: [],
-      // messages: [],
-      // searchQuery: "",
-    };
+    return {};
   },
   methods: {
     async getListConversation() {
-      const uId = this.$store.state.user.id;
       try {
-        const response = await axios.get(`${baseUrl}/list-conversation?userId=${uId}`);
-        if (response.status === 200 && response.data.length > 0) {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${baseUrl}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
           this.conversations = response.data;
-          this.renderConversations(); 
+          this.renderConversations();
         }
       } catch (error) {
         console.log("Error fetching conversations:", error);
       }
     },
+
+    //function to gen list conversation
     renderConversations() {
-      const container = this.$refs.conversationListContainer;
-      container.innerHTML = ""; // Clear previous contents
+      const container = document.getElementById("conversationListContainer");
+      container.innerHTML = "";
 
       this.conversations.forEach((conversation) => {
-        console.log("Rendering conversation:"+JSON.stringify( conversation));
         const chatPeopleDiv = document.createElement("div");
         chatPeopleDiv.className = "chat_people";
 
@@ -62,30 +65,63 @@ export default {
 
         const span = document.createElement("span");
         span.className = "conversation_name";
-        span.innerText = conversation.conversationname;
+        span.innerText = conversation.conversationName.replace(/"/g, "");
 
         const p = document.createElement("p");
-        p.innerText = "last message"; 
-
-        chatIbDiv.appendChild(span);
-        chatIbDiv.appendChild(p);
 
         const chatTimeDiv = document.createElement("div");
         chatTimeDiv.className = "chat_date";
-        chatTimeDiv.innerText = "11:11"; 
+
+        // if it's a old conversation
+        if (conversation.lastMessage && conversation.lastMessage.trim() !== "") {
+          p.innerText = conversation.lastMessage;
+          chatTimeDiv.innerText = this.formatTime(conversation.lastMessageTime);
+        }
+        // else {
+        chatTimeDiv.innerText = this.formatTime(conversation.createdAt);
+        // }
+
+        chatIbDiv.appendChild(span);
+        chatIbDiv.appendChild(p);
 
         chatPeopleDiv.appendChild(images);
         chatPeopleDiv.appendChild(chatIbDiv);
         chatPeopleDiv.appendChild(chatTimeDiv);
 
-        chatPeopleDiv.onclick = () => this.loadConversationDetails(conversation.id); 
+        chatPeopleDiv.onclick = () => {
+          chatState.conversationName = conversation.conversationName;
+          chatState.chatType = conversation.type;
+
+          this.loadConversationDetails(conversation.id);
+        };
 
         container.appendChild(chatPeopleDiv);
       });
     },
-   
+
     loadConversationDetails(conversationId) {
-      this.$router.push({ name: "conversation_detail", params: { conversationId } });
+      this.$router.push({
+        name: "conversation_detail",
+        params: { conversationId },
+      });
+    },
+    // formatTime(time) {
+    //   const date = new Date(time)
+    //      const hours = date.getHours()
+    //   const minutes = date.getMinutes()
+    //   return `${hours} : ${minutes}`;
+    // }
+    formatTime(time) {
+      const date = new Date(time);
+      const now = new Date();
+      const isToday = date.toDateString() === now.toDateString();
+
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+
+      return isToday
+        ? `${hours}:${minutes}`
+        : `${date.toLocaleDateString()} ${hours}:${minutes}`;
     },
   },
   mounted() {
@@ -93,44 +129,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.container {
-  max-width: 100%;
-}
-.body {
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.chat_img {
-  width: 50px;
-  height: 50px;
-}
-.conversation_name {
-  font-size: 14px;
-  font-weight: 500;
-  width: 97%;
-}
-.chat_ib {
-  float: left;
-  padding: 0 0 0 15px;
-  width: 90%;
-}
-.chat_date {
-  font-size: 12px;
-}
-.search_bar {
-  width: 95%;
-  height: 40px;
-}
-.nameuser {
-  border-bottom: 1px solid #c4c4c4;
-  padding: 0 15px;
-}
-.chat_people {
-  display: flex;
-  margin-top: 10px;
-  height: 60px;
-}
-</style>
