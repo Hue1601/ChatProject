@@ -65,14 +65,15 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
                     return;
 
                 }
-            }else {
-                // Nếu không có Authorization header, trả về lỗi
-                if (!isLogin(request)) { // Trừ trường hợp endpoint là login
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().write(objectMapper.writeValueAsString(MessageError.MISSING_TOKEN));
-                    return;
-                }
             }
+//            else {
+//                // Nếu không có Authorization header, trả về lỗi
+//                if (!isLogin(request)) {
+//                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//                    response.getWriter().write(objectMapper.writeValueAsString(MessageError.MISSING_TOKEN));
+//                    return;
+//                }
+//            }
 
         filterChain.doFilter(request, response);
     }
@@ -115,8 +116,11 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isLogin(HttpServletRequest request) {
-        return request.getServletPath().equalsIgnoreCase("/api/login")
-                && request.getMethod().equalsIgnoreCase("POST");
+        return (request.getServletPath().equalsIgnoreCase("/api/authentication/login")
+                && request.getMethod().equalsIgnoreCase("POST")) ||
+                (request.getServletPath().equalsIgnoreCase("/api/authentication/register")
+                        && request.getMethod().equalsIgnoreCase("POST"))
+                ;
     }
 
     private String createOTP() {
