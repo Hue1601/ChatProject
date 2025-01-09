@@ -1,9 +1,8 @@
-package com.example.routervuebe.Response;
+package com.example.routervuebe.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.relational.core.sql.In;
 
 @AllArgsConstructor
 @Data

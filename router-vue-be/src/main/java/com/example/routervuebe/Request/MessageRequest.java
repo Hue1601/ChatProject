@@ -1,4 +1,4 @@
-package com.example.routervuebe.Request;
+package com.example.routervuebe.request;
 
 
 import lombok.AllArgsConstructor;

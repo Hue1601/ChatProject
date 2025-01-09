@@ -1,6 +1,5 @@
-package com.example.routervuebe.Request;
+package com.example.routervuebe.request;
 
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

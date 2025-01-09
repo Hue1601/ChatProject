@@ -45,7 +45,7 @@
 import CompHeader from "../../components/CompHeader.vue";
 import axios from "axios";
 import { chatState } from "/newwave/ChatProject/router-vue/src/JS/chat.js";
-const baseUrl = "http://localhost:8080/api";
+const baseUrl = "http://localhost:8080/api/chat";
 export default {
   name: "create",
   data() {
@@ -158,7 +158,6 @@ export default {
           (selectedUser) => selectedUser.id
         );
       }
-      console.log("1111111 " + JSON.stringify(chatState.selectedUsers))
     },
 
     async createConversation() {

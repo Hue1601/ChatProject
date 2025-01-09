@@ -67,7 +67,7 @@
 import CompHeader from "../../components/CompHeader.vue";
 import axios from 'axios';
 
- const baseUrl = "http://localhost:8080/api";
+ const baseUrl = "http://localhost:8080/api/user";
 export default {
   name: "list-user",
   data() {

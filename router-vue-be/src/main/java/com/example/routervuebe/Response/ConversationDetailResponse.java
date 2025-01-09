@@ -1,10 +1,9 @@
-package com.example.routervuebe.Response;
+package com.example.routervuebe.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.relational.core.sql.In;
 
 import java.time.LocalDateTime;
 

@@ -1,5 +1,7 @@
 <template>
+<div>
   <h2 style="text-align: center; margin-top: 5px">Thêm mới nhân viên</h2>
+  
   <div class="container">
     <label class="form-label">Username</label>
     <input type="text" class="form-control" v-model="users.username" v-bind:class="{'is-invalid':error.username}"/>
@@ -30,12 +32,13 @@
       Thêm mới
     </button>
   </div>
+</div>
 </template>
 
 <script>
 import axios from "axios";
-//const baseUrl = "http://localhost:3000/users";
-const baseUrl = "http://localhost:8080/api";
+
+const baseUrl = "http://localhost:8080/api/user";
 export default {
   name: "add-user",
   data() {

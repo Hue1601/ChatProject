@@ -1,4 +1,4 @@
-package com.example.routervuebe.Exception;
+package com.example.routervuebe.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
