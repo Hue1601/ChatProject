@@ -52,8 +52,7 @@ export default {
     return {
       users: [],
       search: "",
-      token:localStorage.getItem("token")
-      
+      token: localStorage.getItem("token"),
     };
   },
   components: {
@@ -66,6 +65,7 @@ export default {
       var btnGroup = document.getElementById("btnGroup");
       var tableListUser = document.getElementById("tableListUser");
       tableListUser.style.display = "block";
+
       if (type == "group") {
         btnGroup.classList.add("active");
         btnPrivate.classList.remove("active");
@@ -73,21 +73,22 @@ export default {
         btnPrivate.classList.add("active");
         btnGroup.classList.remove("active");
       }
-       const checkboxes = document.querySelectorAll(".checkboxs");
-    checkboxes.forEach((checkbox) => {
-      checkbox.checked = false;
-    });
-    chatState.selectedUsers = [];
+
+      const checkboxes = document.querySelectorAll(".checkboxs");
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = false;
+      });
+      chatState.selectedUsers = [];
     },
 
     async GetListUser() {
       try {
-  
         const ownerCode = localStorage.getItem("ownerCode");
         const body = document.getElementById("listUser");
-          body.innerHTML = "";
-        const response = await axios.get(`${baseUrl}/list`,{
-           headers: {
+        body.innerHTML = "";
+        
+        const response = await axios.get(`${baseUrl}/list`, {
+          headers: {
             Authorization: `Bearer ${this.token}`,
           },
         });
@@ -131,7 +132,7 @@ export default {
     },
     async handleCheckbox(event, user) {
       const chatType = chatState.chatType;
-  
+
       if (chatType === "private") {
         const checkboxes = document.querySelectorAll(".checkboxs");
 
@@ -144,19 +145,20 @@ export default {
         chatState.selectedUsers = event.target.checked ? [user] : [];
         chatState.title = JSON.stringify(chatState.selectedUsers[0].username);
         chatState.memberCode = JSON.stringify(chatState.selectedUsers[0].id);
-      }else if (chatType === "group") {
-     
-      if (event.target.checked) {
-        chatState.selectedUsers.push(user); // Add user to the list
-       
-      } else {
-        chatState.selectedUsers = chatState.selectedUsers.filter(
-          (selectedUser) => selectedUser.id !== user.id
-        ); // Remove user from the list
+      } else  {
+        if (event.target.checked) {
+          chatState.selectedUsers.push(user); // Add user to the list
+        } 
+         else {
+          chatState.selectedUsers = chatState.selectedUsers.filter(
+            (selectedUser) => selectedUser.id !== user.id
+          ); // Remove user from the list
+        }
+        chatState.memberCode = chatState.selectedUsers.map(
+          (selectedUser) => selectedUser.id
+        );
       }
-       chatState.memberCode = chatState.selectedUsers.map((selectedUser) => selectedUser.id);
-      }
-      console.log("select " + JSON.stringify(chatState.selectedUsers));
+      console.log("1111111 " + JSON.stringify(chatState.selectedUsers))
     },
 
     async createConversation() {
@@ -166,7 +168,7 @@ export default {
       const ownerCode = localStorage.getItem("ownerCode");
 
       try {
-        if (chatType === "private") {
+         if (chatType === "private") {
           const payload = {
             name: title,
             type: chatType,
@@ -175,15 +177,19 @@ export default {
 
           const response = await axios.post(
             `${baseUrl}/create-conversation`,
-            payload,{headers: {
-            Authorization: `Bearer ${this.token}`,
-          }},
+            payload,
+            {
+              headers: {
+                Authorization: `Bearer ${this.token}`,
+              },
+            }
           );
 
           if (response.status === 200) {
             this.$router.push("/list_conversation");
           }
-        } else {
+        }
+         else {
           this.$router.push("/setting");
         }
       } catch (error) {

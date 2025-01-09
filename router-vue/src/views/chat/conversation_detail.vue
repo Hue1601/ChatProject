@@ -48,14 +48,12 @@ export default {
       userId: localStorage.getItem("ownerCode"),
       activeConversationName: chatState.conversationName.replace(/"/g, ""),
       activeConversationId: this.conversationId,
-      token:localStorage.getItem("token")
+      token: localStorage.getItem("token"),
     };
   },
 
   methods: {
-    
     async getConversationDetail() {
-      
       try {
         const response = await axios.get(
           `${baseUrl}/detail-conversation/${this.activeConversationId}`,
@@ -74,14 +72,28 @@ export default {
         console.log("Error fetching conversations:", error);
       }
     },
-
     renderConversationDetail() {
       const listMessage = document.getElementById("listMessage");
       const type = chatState.chatType;
 
       listMessage.innerHTML = "";
 
+      let previousDate = null;
+
       this.messages.forEach((message) => {
+        const messageDate = new Date(message.createAt);
+        const formattedDate = this.formatDateHeader(messageDate);
+
+        // Check if the date has changed
+        if (!previousDate || previousDate !== formattedDate) {
+          previousDate = formattedDate;
+
+          const dateHeader = document.createElement("div");
+          dateHeader.className = "date_header";
+          dateHeader.innerText = formattedDate;
+          listMessage.appendChild(dateHeader);
+        }
+
         // Check if the message is sent by the logged-in user
         const isSendMessage = message.memberCode === Number(this.userId);
 
@@ -133,14 +145,24 @@ export default {
         this.scrollToBottom();
       });
     },
+
     formatTime(localTime) {
       const date = new Date(localTime);
       const hours = String(date.getHours()).padStart(2, "0");
       const minutes = String(date.getMinutes()).padStart(2, "0");
       return `${hours}:${minutes}`;
     },
-    async sendMessage() {
+    formatDateHeader(date) {
+      const options = {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        weekday: "short",
+      };
+      return date.toLocaleDateString(options);
+    },
 
+    async sendMessage() {
       if (!this.newMessage.trim() || !this.activeConversationId) return;
 
       const payload = {
@@ -151,24 +173,24 @@ export default {
       };
 
       try {
-        const response = await axios.post(`${baseUrl}/send-message`, payload,{
+        const response = await axios.post(`${baseUrl}/send-message`, payload, {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
         });
 
-        if (response.status === 200 ) {
+        if (response.status === 200) {
           //push new message to list message
           const newMessage = {
             ...response.data,
-            memberCode: Number(this.userId), 
-            createAt: new Date().toISOString(), 
+            memberCode: Number(this.userId),
+            createAt: new Date().toISOString(),
           };
 
-          this.messages.push(newMessage); 
-           this.renderSingleMessage(newMessage); 
+          this.messages.push(newMessage);
+          this.renderSingleMessage(newMessage);
           this.newMessage = "";
-          this.scrollToBottom(); 
+          this.scrollToBottom();
         }
       } catch (error) {
         console.error("Error sending message:", error);
@@ -176,7 +198,7 @@ export default {
       }
     },
 
-//to gen new messagemessage
+    //to gen new messagemessage
     renderSingleMessage(message) {
       const listMessage = document.getElementById("listMessage");
       const isSendMessage = message.memberCode === Number(this.userId);

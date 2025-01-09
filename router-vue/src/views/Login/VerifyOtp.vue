@@ -11,7 +11,7 @@
       style="margin-left: 33%"
       @click="handleVerify()"
     >
-      <span>ĐĂNG NHẬP</span>
+      <span>Xác nhận</span>
     </button>
     <div v-if="errorMessage" class="alert alert-danger" role="alert">
       {{ errorMessage }}

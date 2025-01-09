@@ -130,6 +130,14 @@ margin-top: 0;
   margin-left: 10px;
   width: 70%;
 }
+.date_header {
+  text-align: center;
+  margin: 10px 0;
+  color: #888;
+  font-size: 14px;
+  font-weight: bold;
+}
+
 
 /* create */
 .pagination{
