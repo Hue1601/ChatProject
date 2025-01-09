@@ -19,6 +19,10 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
     @Query("SELECT new com.example.routervuebe.response.UserResponse(u.id,u.username) FROM Users u")
     List<UserResponse> getUsers();
 
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
+
 }
 
 

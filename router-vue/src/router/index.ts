@@ -66,6 +66,11 @@ const router = createRouter({
       name: 'setting',
       component: () => import('../views/chat/setting.vue')
     },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/login/register.vue')
+    }
   ]
 })
 

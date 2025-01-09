@@ -15,7 +15,7 @@
     <button type="submit" class="btn btn-primary btn-block mb-4" style="margin-left: 33%" @click="login()"  >
       <span>ĐĂNG NHẬP</span>
     </button>
-
+   <a @click="register()" style="color: blue; margin-left: 80%;" >Đăng ký</a>
     <div v-if="errorMessage" class="alert alert-danger" role="alert">
       {{ errorMessage }}
     </div>
@@ -25,7 +25,7 @@
 <script>
 import axios from "axios";
 
-const baseUrl = "http://localhost:8080/api/authentication/login";
+const baseUrl = "http://localhost:8080/api/login";
 
 export default {
   name: "login",
@@ -65,6 +65,9 @@ export default {
 
       }
     },
+    register(){
+      this.$router.push("/register");
+    }
   },
 };
 </script>
