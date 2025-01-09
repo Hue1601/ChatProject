@@ -68,24 +68,44 @@ export default {
         span.innerText = conversation.conversationName.replace(/"/g, "");
 
         const p = document.createElement("p");
-        p.innerText = "last message";
+        // if it's a new conversation
+        if (
+          conversation.lastMessage &&
+          conversation.lastMessage.trim() !== ""
+        ) {
+          p.innerText = conversation.lastMessage;
+        } else {
+          p.style.display = "none";
+        
+        }
 
         chatIbDiv.appendChild(span);
         chatIbDiv.appendChild(p);
 
         const chatTimeDiv = document.createElement("div");
         chatTimeDiv.className = "chat_date";
-        chatTimeDiv.innerText = this.formatTime(conversation.createdAt);
+
+        // if it's a old conversation
+        if (
+          !conversation.lastMessage ||
+          conversation.lastMessage.trim() === ""
+        ) {
+          chatTimeDiv.innerText = this.formatTime(conversation.createdAt);
+        } else {
+          chatTimeDiv.innerText = this.formatTime(conversation.lastMessageTime);
+        }
 
         chatPeopleDiv.appendChild(images);
         chatPeopleDiv.appendChild(chatIbDiv);
         chatPeopleDiv.appendChild(chatTimeDiv);
+
         chatPeopleDiv.onclick = () => {
           chatState.conversationName = conversation.conversationName;
           chatState.chatType = conversation.type;
 
           this.loadConversationDetails(conversation.id);
         };
+
         container.appendChild(chatPeopleDiv);
       });
     },
@@ -96,13 +116,24 @@ export default {
         params: { conversationId },
       });
     },
+    // formatTime(time) {
+    //   const date = new Date(time)
+    //      const hours = date.getHours()
+    //   const minutes = date.getMinutes()
+    //   return `${hours} : ${minutes}`;
+    // }
     formatTime(time) {
-      const date = new Date(time)
-         const hours = date.getHours()
-      const minutes = date.getMinutes()
-      return `${hours} : ${minutes}`;
-    }
+      const date = new Date(time);
+      const now = new Date();
+      const isToday = date.toDateString() === now.toDateString();
 
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+
+      return isToday
+        ? `${hours}:${minutes}`
+        : `${date.toLocaleDateString()} ${hours}:${minutes}`;
+    },
   },
   mounted() {
     this.getListConversation();
