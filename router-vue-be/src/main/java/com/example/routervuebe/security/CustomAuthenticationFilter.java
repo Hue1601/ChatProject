@@ -49,39 +49,45 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
     public CustomAuthenticationFilter(OTPRepo otpRepo) {
         this.otpRepo = otpRepo;
     }
+
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException,IOException  {
+            throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
 
-            if (isLogin(request)) {
-                handleLogin(request, response);
+        // Nếu là endpoint /register hoặc /login thì bỏ qua kiểm tra token
+        if (isPublicEndpoint(request)) {
+            if (request.getServletPath().equalsIgnoreCase("/api/login")
+                    && request.getMethod().equalsIgnoreCase("POST")) {
+                handleLogin(request, response); // Gọi logic xử lý login
                 return;
             }
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                String token = authHeader.substring(7);
-                try {
-                    Claims claims = jwtUtil.validateToken(token);
-                    String username = claims.getSubject();
-                    request.setAttribute("username", username);
-                } catch (Exception e) {
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    response.getWriter().write(objectMapper.writeValueAsString(MessageError.INVALID_EXPIRED_TOKEN));
-                    return;
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-                }
+        // Logic xử lý token
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            try {
+                Claims claims = jwtUtil.validateToken(token);
+                String username = claims.getSubject();
+                request.setAttribute("username", username);
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write(objectMapper.writeValueAsString(MessageError.INVALID_EXPIRED_TOKEN));
+                return;
             }
-            else {
-                // Nếu không có Authorization header, trả về lỗi
-                if (!isLogin(request)) {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().write(objectMapper.writeValueAsString(MessageError.MISSING_TOKEN));
-                    return;
-                }
-            }
+        } else {
+            // Nếu không có Authorization header, trả về lỗi
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(objectMapper.writeValueAsString(MessageError.MISSING_TOKEN));
+            return;
+        }
 
         filterChain.doFilter(request, response);
     }
+
 
     public void handleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
@@ -103,8 +109,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
     public void processLogin(LoginRequest loginRequest, HttpServletResponse response) throws IOException {
         Users users = userRepo.findByUsername(loginRequest.getUsername());
-       System.out.println("users" + users);
-        System.out.println("users" + loginRequest.getPassword());
+
        if (users == null || !loginRequest.getUsername().equals(users.getUsername()) ||
            !passwordEncoder.matches(loginRequest.getPassword(),users.getPass())) {
             throw new AuthenticationException(MessageError.INVALID_USERNAME_PASSWORD, HttpStatus.FORBIDDEN);
@@ -126,7 +131,11 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         return request.getServletPath().equalsIgnoreCase("/api/login")
                 && request.getMethod().equalsIgnoreCase("POST");
     }
-
+    private boolean isPublicEndpoint(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return (path.equalsIgnoreCase("/api/login") && request.getMethod().equalsIgnoreCase("POST"))
+                || (path.equalsIgnoreCase("/api/authentication/register") && request.getMethod().equalsIgnoreCase("POST"));
+    }
     private String createOTP() {
         return String.valueOf(new Random().nextInt(90000) + 10000);
     }

@@ -17,7 +17,6 @@
           <tr>
             <th scope="col">STT</th>
             <th scope="col">Username</th>
-            <th scope="col">Password</th>
             <th scope="col">SDT</th>
             <th scope="col">Giới tính</th>
             <th scope="col">Địa chỉ</th>
@@ -28,7 +27,6 @@
           <tr v-for="(item,index) in users" :key="index">
             <td>{{ index + 1 + ((currentPage - 1) * pageSize) }}</td>
             <td>{{ item.username }}</td>
-            <td>{{ item.pass }}</td>
             <td>{{ item.sdt }}</td>
             <td>{{ item.gioitinh }}</td>
             <td>{{ item.diachi }}</td>
