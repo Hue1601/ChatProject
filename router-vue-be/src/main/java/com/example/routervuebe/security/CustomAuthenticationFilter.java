@@ -18,7 +18,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -40,6 +42,9 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
     private JwtUtils jwtUtil;
     @Autowired
     private ObjectMapper objectMapper;
+    @Lazy
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     public CustomAuthenticationFilter(OTPRepo otpRepo) {
         this.otpRepo = otpRepo;
@@ -66,14 +71,14 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
                 }
             }
-//            else {
-//                // Nếu không có Authorization header, trả về lỗi
-//                if (!isLogin(request)) {
-//                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//                    response.getWriter().write(objectMapper.writeValueAsString(MessageError.MISSING_TOKEN));
-//                    return;
-//                }
-//            }
+            else {
+                // Nếu không có Authorization header, trả về lỗi
+                if (!isLogin(request)) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write(objectMapper.writeValueAsString(MessageError.MISSING_TOKEN));
+                    return;
+                }
+            }
 
         filterChain.doFilter(request, response);
     }
@@ -98,8 +103,10 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
     public void processLogin(LoginRequest loginRequest, HttpServletResponse response) throws IOException {
         Users users = userRepo.findByUsername(loginRequest.getUsername());
-
-       if (users == null || !loginRequest.getUsername().equals(users.getUsername()) || !loginRequest.getPassword().equals(users.getPass())) {
+       System.out.println("users" + users);
+        System.out.println("users" + loginRequest.getPassword());
+       if (users == null || !loginRequest.getUsername().equals(users.getUsername()) ||
+           !passwordEncoder.matches(loginRequest.getPassword(),users.getPass())) {
             throw new AuthenticationException(MessageError.INVALID_USERNAME_PASSWORD, HttpStatus.FORBIDDEN);
         }
 
@@ -107,7 +114,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         saveOTP(users.getUsername(), otp, users.getEmail());
         sendEmail(users.getEmail(), otp);
         String token = jwtUtil.generateToken(users.getUsername());
-//        LoginResponse loginResponse = new LoginResponse(token);
+
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setUsername(users.getUsername());
         loginResponse.setToken(token);
@@ -117,8 +124,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
     private boolean isLogin(HttpServletRequest request) {
         return request.getServletPath().equalsIgnoreCase("/api/login")
-                && request.getMethod().equalsIgnoreCase("POST") ;
-
+                && request.getMethod().equalsIgnoreCase("POST");
     }
 
     private String createOTP() {
