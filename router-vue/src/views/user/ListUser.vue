@@ -79,6 +79,7 @@ export default {
      currentPage: 1,
       totalPages: 1,
       pageSize: 8,
+      
     };
   },
   components: {
@@ -97,23 +98,24 @@ export default {
         console.error("Search error:", error);
       }
     },
-      async GetListUser(page = 1) {
-   
-      try {
-        const response = await axios.get(`${baseUrl}/pagination`, {
-          params: { p: page - 1 } 
-        },{
-           headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        });
-        this.users = response.data.users;
-        this.totalPages = response.data.totalPages;
-        this.currentPage = response.data.currentPage + 1; 
-      } catch (error) {
-        console.error(error);
-      }
-    },
+    
+    async GetListUser(page = 1) {
+  try {
+    console.log("token " + this.token)
+    const response = await axios.get(`${baseUrl}/pagination`, {
+      params: { p: page - 1 },
+      headers: {
+        Authorization: `Bearer ${this.token}`, // Đảm bảo token được truyền vào header đúng cách
+      },
+    });
+    this.users = response.data.users;
+    this.totalPages = response.data.totalPages;
+    this.currentPage = response.data.currentPage + 1; 
+  } catch (error) {
+    console.error(error);
+  }
+},
+
     async DeleteUser(itemDelete) {
    if (confirm('Are you sure you want to delete this user?')) {
         try {
