@@ -17,10 +17,8 @@
           <tr>
             <th scope="col">STT</th>
             <th scope="col">Username</th>
-            <th scope="col">Password</th>
             <th scope="col">SDT</th>
             <th scope="col">Giới tính</th>
-            <th scope="col">Địa chỉ</th>
             <th scope="col">Hành động</th>
           </tr>
         </thead>
@@ -28,10 +26,8 @@
           <tr v-for="(item,index) in users" :key="index">
             <td>{{ index + 1 + ((currentPage - 1) * pageSize) }}</td>
             <td>{{ item.username }}</td>
-            <td>{{ item.pass }}</td>
             <td>{{ item.sdt }}</td>
             <td>{{ item.gioitinh }}</td>
-            <td>{{ item.diachi }}</td>
             <td>
               <RouterLink :to="`/user/update/${item.id}`" class="btn btn-outline-primary">
               Update</RouterLink>
@@ -67,7 +63,7 @@
 import CompHeader from "../../components/CompHeader.vue";
 import axios from 'axios';
 
- const baseUrl = "http://localhost:8080/api";
+ const baseUrl = "http://localhost:8080/api/user";
 export default {
   name: "list-user",
   data() {

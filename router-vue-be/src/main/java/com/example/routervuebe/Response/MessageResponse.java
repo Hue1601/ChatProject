@@ -1,4 +1,4 @@
-package com.example.routervuebe.Response;
+package com.example.routervuebe.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

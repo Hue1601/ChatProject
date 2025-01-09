@@ -21,7 +21,7 @@
 
 <script>
 import axios from "axios";
-const baseUrl = "http://localhost:8080/api/verify";
+const baseUrl = "http://localhost:8080/api/authentication/verify";
 export default {
   name: "verify",
   data() {

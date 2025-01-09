@@ -1,13 +1,13 @@
 package com.example.routervuebe.security;
 
-import com.example.routervuebe.Exception.AuthenticationException;
-import com.example.routervuebe.Exception.MessageError;
-import com.example.routervuebe.Request.LoginRequest;
-import com.example.routervuebe.Response.LoginResponse;
-import com.example.routervuebe.Entity.OTP;
-import com.example.routervuebe.Entity.Users;
-import com.example.routervuebe.Repository.OTPRepo;
-import com.example.routervuebe.Repository.UserRepository;
+import com.example.routervuebe.exception.AuthenticationException;
+import com.example.routervuebe.exception.MessageError;
+import com.example.routervuebe.request.LoginRequest;
+import com.example.routervuebe.response.LoginResponse;
+import com.example.routervuebe.entity.OTP;
+import com.example.routervuebe.entity.Users;
+import com.example.routervuebe.repository.OTPRepo;
+import com.example.routervuebe.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.mail.*;
@@ -18,7 +18,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -40,42 +42,52 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
     private JwtUtils jwtUtil;
     @Autowired
     private ObjectMapper objectMapper;
+    @Lazy
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     public CustomAuthenticationFilter(OTPRepo otpRepo) {
         this.otpRepo = otpRepo;
     }
+
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException,IOException  {
+            throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
 
-            if (isLogin(request)) {
-                handleLogin(request, response);
+        // Nếu là endpoint /register hoặc /login thì bỏ qua kiểm tra token
+        if (isPublicEndpoint(request)) {
+            if (request.getServletPath().equalsIgnoreCase("/api/login")
+                    && request.getMethod().equalsIgnoreCase("POST")) {
+                handleLogin(request, response); // Gọi logic xử lý login
                 return;
             }
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                String token = authHeader.substring(7);
-                try {
-                    Claims claims = jwtUtil.validateToken(token);
-                    String username = claims.getSubject();
-                    request.setAttribute("username", username);
-                } catch (Exception e) {
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    response.getWriter().write(objectMapper.writeValueAsString(MessageError.INVALID_EXPIRED_TOKEN));
-                    return;
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-                }
-            }else {
-                // Nếu không có Authorization header, trả về lỗi
-                if (!isLogin(request)) { // Trừ trường hợp endpoint là login
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().write(objectMapper.writeValueAsString(MessageError.MISSING_TOKEN));
-                    return;
-                }
+        // Logic xử lý token
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            try {
+                Claims claims = jwtUtil.validateToken(token);
+                String username = claims.getSubject();
+                request.setAttribute("username", username);
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write(objectMapper.writeValueAsString(MessageError.INVALID_EXPIRED_TOKEN));
+                return;
             }
+        } else {
+            // Nếu không có Authorization header, trả về lỗi
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(objectMapper.writeValueAsString(MessageError.MISSING_TOKEN));
+            return;
+        }
 
         filterChain.doFilter(request, response);
     }
+
 
     public void handleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
@@ -98,7 +110,8 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
     public void processLogin(LoginRequest loginRequest, HttpServletResponse response) throws IOException {
         Users users = userRepo.findByUsername(loginRequest.getUsername());
 
-       if (users == null || !loginRequest.getUsername().equals(users.getUsername()) || !loginRequest.getPassword().equals(users.getPass())) {
+       if (users == null || !loginRequest.getUsername().equals(users.getUsername()) ||
+           !passwordEncoder.matches(loginRequest.getPassword(),users.getPass())) {
             throw new AuthenticationException(MessageError.INVALID_USERNAME_PASSWORD, HttpStatus.FORBIDDEN);
         }
 
@@ -106,7 +119,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         saveOTP(users.getUsername(), otp, users.getEmail());
         sendEmail(users.getEmail(), otp);
         String token = jwtUtil.generateToken(users.getUsername());
-//        LoginResponse loginResponse = new LoginResponse(token);
+
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setUsername(users.getUsername());
         loginResponse.setToken(token);
@@ -118,7 +131,11 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         return request.getServletPath().equalsIgnoreCase("/api/login")
                 && request.getMethod().equalsIgnoreCase("POST");
     }
-
+    private boolean isPublicEndpoint(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return (path.equalsIgnoreCase("/api/login") && request.getMethod().equalsIgnoreCase("POST"))
+                || (path.equalsIgnoreCase("/api/authentication/register") && request.getMethod().equalsIgnoreCase("POST"));
+    }
     private String createOTP() {
         return String.valueOf(new Random().nextInt(90000) + 10000);
     }

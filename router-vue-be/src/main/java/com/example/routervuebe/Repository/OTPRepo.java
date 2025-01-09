@@ -1,6 +1,6 @@
-package com.example.routervuebe.Repository;
+package com.example.routervuebe.repository;
 
-import com.example.routervuebe.Entity.OTP;
+import com.example.routervuebe.entity.OTP;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

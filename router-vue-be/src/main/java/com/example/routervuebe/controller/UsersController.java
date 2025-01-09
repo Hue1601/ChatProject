@@ -1,9 +1,9 @@
 package com.example.routervuebe.controller;
 
-import com.example.routervuebe.Entity.Users;
-import com.example.routervuebe.Repository.UserRepository;
+import com.example.routervuebe.entity.Users;
+import com.example.routervuebe.repository.UserRepository;
 
-import com.example.routervuebe.Response.UserResponse;
+import com.example.routervuebe.response.UserResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 
 public class UsersController {
     @Autowired

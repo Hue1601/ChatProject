@@ -30,9 +30,9 @@
         <li><a class="dropdown-item">Setting</a></li>
         <li><hr class="dropdown-divider" /></li>
         <li>
-          <RouterLink to="/" style="color: white">
-            <a class="dropdown-item" href="#">Logout</a>
-          </RouterLink>
+          <!-- <RouterLink to="/" style="color: white"> -->
+            <a class="dropdown-item" href="#" @click="logout()">Logout</a>
+          <!-- </RouterLink> -->
         </li>
       </ul>
   </div>
@@ -52,7 +52,12 @@ export default {
       search: "",
     };
   },
-  methods: {},
+  methods: {
+    async logout(){
+       localStorage.removeItem("token");
+      this.$router.push("/")
+    }
+  },
   mounted() {},
 };
 </script>

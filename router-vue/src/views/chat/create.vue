@@ -87,7 +87,7 @@ export default {
         const body = document.getElementById("listUser");
         body.innerHTML = "";
         
-        const response = await axios.get(`${baseUrl}/list`, {
+        const response = await axios.get(`${baseUrl}/user/list`, {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
@@ -158,7 +158,6 @@ export default {
           (selectedUser) => selectedUser.id
         );
       }
-      console.log("1111111 " + JSON.stringify(chatState.selectedUsers))
     },
 
     async createConversation() {
@@ -176,7 +175,7 @@ export default {
           };
 
           const response = await axios.post(
-            `${baseUrl}/create-conversation`,
+            `${baseUrl}/chat/create-conversation`,
             payload,
             {
               headers: {

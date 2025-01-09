@@ -1,7 +1,7 @@
-package com.example.routervuebe.Repository;
+package com.example.routervuebe.repository;
 
-import com.example.routervuebe.Entity.Users;
-import com.example.routervuebe.Response.UserResponse;
+import com.example.routervuebe.entity.Users;
+import com.example.routervuebe.response.UserResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -16,8 +16,12 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
 
     Users findByUsername(String username);
 
-    @Query("SELECT new com.example.routervuebe.Response.UserResponse(u.id,u.username) FROM Users u")
+    @Query("SELECT new com.example.routervuebe.response.UserResponse(u.id,u.username) FROM Users u")
     List<UserResponse> getUsers();
+
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
 
 }
 

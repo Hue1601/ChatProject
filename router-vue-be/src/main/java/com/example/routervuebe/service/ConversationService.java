@@ -1,16 +1,16 @@
 package com.example.routervuebe.service;
 
 
-import com.example.routervuebe.Entity.Conversations;
-import com.example.routervuebe.Entity.Messages;
-import com.example.routervuebe.Entity.UserConversations;
-import com.example.routervuebe.Entity.Users;
-import com.example.routervuebe.Repository.ConversationsRepo;
-import com.example.routervuebe.Repository.MessagesRepo;
-import com.example.routervuebe.Repository.UserConversationRepo;
-import com.example.routervuebe.Repository.UserRepository;
-import com.example.routervuebe.Request.MessageRequest;
-import com.example.routervuebe.Response.MessageResponse;
+import com.example.routervuebe.entity.Conversations;
+import com.example.routervuebe.entity.Messages;
+import com.example.routervuebe.entity.UserConversations;
+import com.example.routervuebe.entity.Users;
+import com.example.routervuebe.repository.ConversationsRepo;
+import com.example.routervuebe.repository.MessagesRepo;
+import com.example.routervuebe.repository.UserConversationRepo;
+import com.example.routervuebe.repository.UserRepository;
+import com.example.routervuebe.request.MessageRequest;
+import com.example.routervuebe.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -39,6 +39,7 @@ public class ConversationService {
         conversation.setConversationName(name);
         conversation.setType(type);
         conversation.setCreateAt(LocalDateTime.now());
+
         conversationRepo.save(conversation);
         for (Integer userId : member) {
             Users user = userRepo.findById(userId)

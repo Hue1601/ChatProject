@@ -15,7 +15,7 @@
     <button type="submit" class="btn btn-primary btn-block mb-4" style="margin-left: 33%" @click="login()"  >
       <span>ĐĂNG NHẬP</span>
     </button>
-
+   <a @click="register()" style="color: blue; margin-left: 80%;" >Đăng ký</a>
     <div v-if="errorMessage" class="alert alert-danger" role="alert">
       {{ errorMessage }}
     </div>
@@ -65,6 +65,9 @@ export default {
 
       }
     },
+    register(){
+      this.$router.push("/register");
+    }
   },
 };
 </script>

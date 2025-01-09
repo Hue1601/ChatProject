@@ -1,27 +1,23 @@
 package com.example.routervuebe.controller;
 
-import com.example.routervuebe.Entity.Users;
-import com.example.routervuebe.Repository.ConversationsRepo;
-import com.example.routervuebe.Repository.UserConversationRepo;
-import com.example.routervuebe.Request.MessageRequest;
-import com.example.routervuebe.Response.ConversationResponse;
-import com.example.routervuebe.Response.MessageResponse;
+import com.example.routervuebe.repository.UserConversationRepo;
+import com.example.routervuebe.request.MessageRequest;
+import com.example.routervuebe.response.ConversationResponse;
+import com.example.routervuebe.response.MessageResponse;
 import com.example.routervuebe.service.ConversationService;
-import com.example.routervuebe.Entity.Conversations;
-import com.example.routervuebe.Entity.Messages;
-import com.example.routervuebe.Repository.MessagesRepo;
-import com.example.routervuebe.Repository.UserRepository;
+import com.example.routervuebe.entity.Conversations;
+import com.example.routervuebe.repository.MessagesRepo;
+import com.example.routervuebe.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/chat")
 public class ChatController {
     @Autowired
     private UserRepository userRepository;
