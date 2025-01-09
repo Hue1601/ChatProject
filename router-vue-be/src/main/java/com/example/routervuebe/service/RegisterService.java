@@ -1,6 +1,7 @@
 package com.example.routervuebe.service;
 
 import com.example.routervuebe.entity.Users;
+import com.example.routervuebe.exception.AuthenticationException;
 import com.example.routervuebe.exception.MessageError;
 import com.example.routervuebe.repository.UserRepository;
 import com.example.routervuebe.response.RegisterResponse;
@@ -21,12 +22,13 @@ public class RegisterService {
     public Object register(Users userRequest) {
         // Check if the username already exists
         if (userRepo.existsByUsername(userRequest.getUsername())) {
-            return MessageError.USERNAME_VALIDATE;
+
+            throw  new AuthenticationException(MessageError.USERNAME_VALIDATE,HttpStatus.BAD_REQUEST);
         }
 
         // Check if the email already exists
         if (userRepo.existsByEmail(userRequest.getEmail())) {
-            return MessageError.EMAIL_VALIDATE;
+            throw new AuthenticationException(MessageError.EMAIL_VALIDATE,HttpStatus.BAD_REQUEST);
         }
 
 
@@ -34,7 +36,7 @@ public class RegisterService {
         String passwordRegex = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).+$";
 
         if (!password.matches(passwordRegex)) {
-            return MessageError.VALIDATE_PASSWORD;
+            throw new AuthenticationException(MessageError.VALIDATE_PASSWORD,HttpStatus.BAD_REQUEST);
         }
 
         userRequest.setPass(passwordEncoder.encode(password));
