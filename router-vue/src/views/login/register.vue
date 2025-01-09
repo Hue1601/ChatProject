@@ -59,7 +59,7 @@ export default {
      async register() {
     const errorMessage = document.getElementById('error-message');
 
-    // Basic form validation
+  
     if (!this.profile.username || !this.profile.pass || !this.profile.email) {
       errorMessage.textContent = 'Please fill all the fields';
       errorMessage.style.display = 'block';
@@ -67,10 +67,10 @@ export default {
     }
 
     try {
-      // Send POST request to the backend
+     
       const response = await axios.post(baseUrl, this.profile);
 
-      if (response.status === 201) { // Check for a successful response
+      if (response.status === 200) { 
         this.$router.push("/");
       }
     } catch (error) {

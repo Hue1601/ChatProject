@@ -143,8 +143,6 @@ export default {
           }
         });
         chatState.selectedUsers = event.target.checked ? [user] : [];
-        chatState.title = JSON.stringify(chatState.selectedUsers[0].username);
-        chatState.memberCode = JSON.stringify(chatState.selectedUsers[0].id);
       } else  {
         if (event.target.checked) {
           chatState.selectedUsers.push(user); // Add user to the list
@@ -160,41 +158,101 @@ export default {
       }
     },
 
+    // async createConversation() {
+    //   const chatType = chatState.chatType;
+    //    const title =   JSON.stringify(chatState.selectedUsers[0].username);
+    //   const userCode =   JSON.stringify(chatState.selectedUsers[0].id);
+    //   const ownerCode = localStorage.getItem("ownerCode");
+
+    //   try {
+    //      if (chatType === "private") {
+          
+    //       const payload = {
+    //         name: title,
+    //         type: chatType,
+    //         member: [Number(ownerCode), Number(userCode)],
+    //       };
+
+    //       const response = await axios.post(
+    //         `${baseUrl}/chat/create-conversation`,
+    //         payload,
+    //         {
+    //           headers: {
+    //             Authorization: `Bearer ${this.token}`,
+    //           },
+    //         }
+    //       );
+
+    //       if (response.status === 200) {
+    //         this.$router.push("/list_conversation");
+    //       }
+    //     }
+    //      else {
+    //       this.$router.push("/setting");
+    //     }
+    //   } catch (error) {
+    //     console.error("Error creating conversation:", error.response || error);
+    //   }
+    // },
     async createConversation() {
-      const chatType = chatState.chatType;
-      const title = chatState.title;
-      const userCode = chatState.memberCode;
-      const ownerCode = localStorage.getItem("ownerCode");
+  const chatType = chatState.chatType;
+  const title =   JSON.stringify(chatState.selectedUsers[0].username);
+      const userCode =   JSON.stringify(chatState.selectedUsers[0].id);
+  const ownerCode = localStorage.getItem("ownerCode");
 
-      try {
-         if (chatType === "private") {
-          const payload = {
-            name: title,
-            type: chatType,
-            member: [Number(ownerCode), Number(userCode)],
-          };
+  try {
+    if (chatType === "private") {
 
-          const response = await axios.post(
-            `${baseUrl}/chat/create-conversation`,
-            payload,
-            {
-              headers: {
-                Authorization: `Bearer ${this.token}`,
-              },
-            }
-          );
+      const response = await axios.get(`${baseUrl}/chat/list-conversation`, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      });
 
-          if (response.status === 200) {
-            this.$router.push("/list_conversation");
-          }
+      if (response.status === 200) {
+        const existingConversation = response.data.find(
+          
+          (conversation) =>
+            conversation.type === "private" &&
+            conversation.conversationName.includes(title) 
+            
+        );
+
+        if (existingConversation) {
+          alert("A private chat with this user already exists.");
+          return;
         }
-         else {
-          this.$router.push("/setting");
-        }
-      } catch (error) {
-        console.error("Error creating conversation:", error.response || error);
       }
-    },
+
+
+      const payload = {
+        name: title,
+        type: chatType,
+        member: [Number(ownerCode), Number(userCode)],
+      };
+
+      const createResponse = await axios.post(
+        `${baseUrl}/chat/create-conversation`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      );
+
+      if (createResponse.status === 200) {
+        this.$router.push("/list_conversation");
+      }
+    } else {
+      this.$router.push("/setting");
+    }
+   
+  } catch (error) {
+    console.error("Error creating conversation:", error.response || error);
+  }
+}
+
   },
   mounted() {
     this.GetListUser();
