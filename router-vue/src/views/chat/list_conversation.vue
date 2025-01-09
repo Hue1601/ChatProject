@@ -18,7 +18,7 @@
 import CompHeader from "../../components/CompHeader.vue";
 import axios from "axios";
 import { chatState } from "/newwave/ChatProject/router-vue/src/JS/chat.js";
-const baseUrl = "http://localhost:8080/api/list-conversation";
+const baseUrl = "http://localhost:8080/api/chat/list-conversation";
 
 export default {
   name: "web-chat",
@@ -68,32 +68,21 @@ export default {
         span.innerText = conversation.conversationName.replace(/"/g, "");
 
         const p = document.createElement("p");
-        // if it's a new conversation
-        if (
-          conversation.lastMessage &&
-          conversation.lastMessage.trim() !== ""
-        ) {
-          p.innerText = conversation.lastMessage;
-        } else {
-          p.style.display = "none";
-        
-        }
-
-        chatIbDiv.appendChild(span);
-        chatIbDiv.appendChild(p);
 
         const chatTimeDiv = document.createElement("div");
         chatTimeDiv.className = "chat_date";
 
         // if it's a old conversation
-        if (
-          !conversation.lastMessage ||
-          conversation.lastMessage.trim() === ""
-        ) {
-          chatTimeDiv.innerText = this.formatTime(conversation.createdAt);
-        } else {
+        if (conversation.lastMessage && conversation.lastMessage.trim() !== "") {
+          p.innerText = conversation.lastMessage;
           chatTimeDiv.innerText = this.formatTime(conversation.lastMessageTime);
         }
+        // else {
+        chatTimeDiv.innerText = this.formatTime(conversation.createdAt);
+        // }
+
+        chatIbDiv.appendChild(span);
+        chatIbDiv.appendChild(p);
 
         chatPeopleDiv.appendChild(images);
         chatPeopleDiv.appendChild(chatIbDiv);

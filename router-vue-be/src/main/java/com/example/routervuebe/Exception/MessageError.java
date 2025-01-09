@@ -1,4 +1,4 @@
-package com.example.routervuebe.Exception;
+package com.example.routervuebe.exception;
 
 public enum MessageError {
     INVALID_USERNAME_PASSWORD("Invalid username or password."),

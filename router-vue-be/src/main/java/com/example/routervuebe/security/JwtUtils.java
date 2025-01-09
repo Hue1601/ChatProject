@@ -1,6 +1,6 @@
 package com.example.routervuebe.security;
 
-import com.example.routervuebe.Repository.UserRepository;
+import com.example.routervuebe.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.core.io.ClassPathResource;

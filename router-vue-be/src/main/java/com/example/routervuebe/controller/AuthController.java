@@ -1,10 +1,10 @@
 package com.example.routervuebe.controller;
 
-import com.example.routervuebe.Exception.AuthenticationException;
-import com.example.routervuebe.Exception.MessageError;
-import com.example.routervuebe.Request.OTPRequest;
-import com.example.routervuebe.Entity.OTP;
-import com.example.routervuebe.Repository.OTPRepo;
+import com.example.routervuebe.exception.AuthenticationException;
+import com.example.routervuebe.exception.MessageError;
+import com.example.routervuebe.request.OTPRequest;
+import com.example.routervuebe.entity.OTP;
+import com.example.routervuebe.repository.OTPRepo;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/authentication")
 public class AuthController {
 @Autowired
 private OTPRepo otpRepo;

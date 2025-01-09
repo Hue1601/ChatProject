@@ -32,7 +32,7 @@
 <script>
 import axios from "axios";
 import { chatState } from "/newwave/ChatProject/router-vue/src/JS/chat.js";
-const baseUrl = "http://localhost:8080/api";
+const baseUrl = "http://localhost:8080/api/chat";
 export default {
   name: "setting",
   data() {

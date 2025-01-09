@@ -36,8 +36,8 @@
 
 <script>
 import axios from 'axios';
-//const baseUrl = "http://localhost:3000/users";
- const baseUrl = "http://localhost:8080/api";
+
+ const baseUrl = "http://localhost:8080/api/user";
 export default {
   name: 'update-user',
   data() {
