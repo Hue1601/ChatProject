@@ -116,11 +116,9 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isLogin(HttpServletRequest request) {
-        return (request.getServletPath().equalsIgnoreCase("/api/authentication/login")
-                && request.getMethod().equalsIgnoreCase("POST")) ||
-                (request.getServletPath().equalsIgnoreCase("/api/authentication/register")
-                        && request.getMethod().equalsIgnoreCase("POST"))
-                ;
+        return request.getServletPath().equalsIgnoreCase("/api/login")
+                && request.getMethod().equalsIgnoreCase("POST") ;
+
     }
 
     private String createOTP() {
