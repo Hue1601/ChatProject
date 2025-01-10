@@ -90,9 +90,9 @@ export default {
           p.innerText = conversation.lastMessage;
           chatTimeDiv.innerText = this.formatTime(conversation.lastMessageTime);
         } 
-       // else {
-      //    chatTimeDiv.innerText = this.formatTime(conversation.createdAt);
-       // }
+       else {
+         chatTimeDiv.innerText = this.formatTime(conversation.createdAt);
+       }
 
         chatIbDiv.appendChild(span);
         chatIbDiv.appendChild(p);
