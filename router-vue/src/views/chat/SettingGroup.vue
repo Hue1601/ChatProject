@@ -46,10 +46,7 @@ export default {
       
     };
   },
-  mounted() {
-  
-    
-  },
+  mounted() {},
   methods: {
    
     back() {
