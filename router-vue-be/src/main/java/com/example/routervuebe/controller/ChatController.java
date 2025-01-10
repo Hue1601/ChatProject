@@ -1,13 +1,17 @@
 package com.example.routervuebe.controller;
 
+import com.example.routervuebe.entity.Users;
+import com.example.routervuebe.repository.ConversationsRepo;
 import com.example.routervuebe.repository.UserConversationRepo;
 import com.example.routervuebe.request.MessageRequest;
 import com.example.routervuebe.response.ConversationResponse;
 import com.example.routervuebe.response.MessageResponse;
+import com.example.routervuebe.response.UserResponse;
 import com.example.routervuebe.service.ConversationService;
 import com.example.routervuebe.entity.Conversations;
 import com.example.routervuebe.repository.MessagesRepo;
 import com.example.routervuebe.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +32,8 @@ public class ChatController {
     private UserConversationRepo userConversationRepo;
     @Autowired
     private ConversationService conversationService;
-
+@Autowired
+private ConversationsRepo conversationsRepo;
 
     @PostMapping("/send-message")
     public ResponseEntity<?> sendMessage(@RequestBody MessageRequest request) {
@@ -68,4 +73,17 @@ public class ChatController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+//    @GetMapping("/list-member-in-group/{conversationId}")
+//    public ResponseEntity<?> getMemberInGroupByUsername(@PathVariable Integer conversationId) {
+//        return ResponseEntity.ok(userConversationRepo.getListMemberInGroup(conversationId));
+//    }
+
+    @GetMapping("/member-in-group/{conversationId}")
+    public ResponseEntity<?> getUsersInConversation(@PathVariable int conversationId) {
+        List<UserResponse> users = userConversationRepo.findUsersByConversationId(conversationId);
+
+        return ResponseEntity.ok(users);
+    }
+
 }
