@@ -18,8 +18,10 @@
 
 <script>
 import CompHeader from "../../components/CompHeader.vue";
-import axios from "axios";
-import { chatState } from "/newwave/ChatProject/router-vue/src/JS/chat.js";
+ import axios from "axios";
+
+import { chatState } from "../../JS/chat.js";
+
 
 const baseUrl = "http://localhost:8080/api/chat/list-conversation";
 
@@ -81,21 +83,23 @@ export default {
         span.className = "conversation_name";
         span.innerText = conversation.conversationName.replace(/"/g, "");
 
-        const p = document.createElement("p");
+        const lastMessage = document.createElement("p");
 
         const chatTimeDiv = document.createElement("div");
         chatTimeDiv.className = "chat_date";
+        const p = document.createElement("p")
+        p.className="chat_time";
 
         if (conversation.lastMessage && conversation.lastMessage.trim() !== "") {
-          p.innerText = conversation.lastMessage;
-          chatTimeDiv.innerText = this.formatTime(conversation.lastMessageTime);
+          lastMessage.innerText = conversation.lastMessage;
+          p.innerText = this.formatTime(conversation.lastMessageTime);
         } 
        else {
-         chatTimeDiv.innerText = this.formatTime(conversation.createdAt);
+         p.innerText = this.formatTime(conversation.createdAt);
        }
-
+         chatTimeDiv.appendChild(p)
         chatIbDiv.appendChild(span);
-        chatIbDiv.appendChild(p);
+        chatIbDiv.appendChild(lastMessage);
 
         chatPeopleDiv.appendChild(images);
         chatPeopleDiv.appendChild(chatIbDiv);
@@ -104,7 +108,7 @@ export default {
         chatPeopleDiv.onclick = () => {
           chatState.conversationName = conversation.conversationName;
           chatState.chatType = conversation.type;
-
+          chatState.conversationId = conversation.id;
           this.loadConversationDetails(conversation.id);
         };
 
@@ -129,7 +133,7 @@ export default {
 
       return isToday
         ? `${hours}:${minutes}`
-        : `${date.toLocaleDateString()} ${hours}:${minutes}`;
+        : `${date.toLocaleDateString()} `;
     },
   },
   mounted() {

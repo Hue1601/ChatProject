@@ -57,7 +57,8 @@
 <script>
 import CompHeader from "../../components/CompHeader.vue";
 import axios from "axios";
-import { chatState } from "/newwave/ChatProject/router-vue/src/JS/chat.js";
+import { chatState } from "../../JS/chat.js";
+
 
 const baseUrl = "http://localhost:8080/api";
 

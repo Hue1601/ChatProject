@@ -14,6 +14,9 @@
         />
         <span>{{ activeConversationName }}</span>
       </div>
+      <img src="https://cdn3.iconfinder.com/data/icons/ui-ux-web-application-simplicon-set/102/information-512.png" style="width:30px"
+      @click="setting()">
+     
     </div>
 
     <div class="body_chat_detail">
@@ -34,7 +37,8 @@
 
 <script>
 import axios from "axios";
-import { chatState } from "/newwave/ChatProject/router-vue/src/JS/chat.js";
+import { chatState } from "../../JS/chat.js";
+
 
 const baseUrl = " http://localhost:8080/api/chat";
 
@@ -254,7 +258,13 @@ export default {
         listMessage.scrollTop = listMessage.scrollHeight;
       });
     },
+     setting(){
+   
+    this.$router.push("/setting-group")
+   
   },
+  },
+
   mounted() {
     this.getConversationDetail();
   },

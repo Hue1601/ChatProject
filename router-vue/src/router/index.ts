@@ -70,7 +70,17 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: () => import('../views/login/register.vue')
-    }
+    },
+     {
+      path: '/setting-group',
+      name: 'setting-group',
+      component: () => import('../views/chat/setting_group.vue')
+    },
+    // {
+    //   path: '/member-in-group',
+    //   name: 'member-in-group',
+    //   component: () => import('../views/chat/member_in_group.vue')
+    // }
   ]
 })
 
