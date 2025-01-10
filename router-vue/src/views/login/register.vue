@@ -56,31 +56,30 @@ export default {
 
     },
     methods:{
-      async register(){
-         const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('pass').value.trim();
-        const email = document.getElementById('email').value.trim();
-          const sdt = document.getElementById('sdt').value.trim();
-        const errorMessage = document.getElementById('error-message');
+     async register() {
+    const errorMessage = document.getElementById('error-message');
 
-        if (!username || !password || !email) {
-            errorMessage.textContent = 'Please fill all the fields';
-            errorMessage.style.display = 'block';
-            return;
-        }
-        try {
-          const response = await axios.post(baseUrl, this.profile);
-          if (response.status === 200) {
-             this.$router.push("/")
-          }
-        } catch (error) {
-            errorMessage.textContent =  'An error occurred. Please try again later.' 
-        }
+  
+    if (!this.profile.username || !this.profile.pass || !this.profile.email) {
+      errorMessage.textContent = 'Please fill all the fields';
+      errorMessage.style.display = 'block';
+      return;
+    }
+
+    try {
+     
+      const response = await axios.post(baseUrl, this.profile);
+
+      if (response.status === 200) { 
+        this.$router.push("/");
       }
+    } catch (error) {
+
+        errorMessage.textContent = error.response.data; 
+      errorMessage.style.display = 'block';
+   
+    }
+  }
     }
 }
 </script>
-
-<style>
-
-</style>

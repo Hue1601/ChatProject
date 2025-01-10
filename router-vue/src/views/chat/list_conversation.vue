@@ -3,21 +3,24 @@
     <comp-header />
     <div class="list_conversation">
       <div style="display: flex; margin-top: 10px">
-        <input class="search_bar" placeholder="Search" v-model="searchQuery" />
-        <img
-          src="/images/message-add.png"
-          alt="Add"
-          style="width: 40px; height: 40px"
+        <input
+          class="search_bar"
+          placeholder="Search"
+          v-model="searchQuery"
+          @input="filterConversations"
         />
+    
       </div>
       <div class="body" id="conversationListContainer"></div>
     </div>
   </div>
 </template>
+
 <script>
 import CompHeader from "../../components/CompHeader.vue";
 import axios from "axios";
 import { chatState } from "/newwave/ChatProject/router-vue/src/JS/chat.js";
+
 const baseUrl = "http://localhost:8080/api/chat/list-conversation";
 
 export default {
@@ -26,7 +29,11 @@ export default {
     CompHeader,
   },
   data() {
-    return {};
+    return {
+      searchQuery: "", 
+      conversations: [], 
+      filteredConversations: [],
+    };
   },
   methods: {
     async getListConversation() {
@@ -40,19 +47,26 @@ export default {
 
         if (response.status === 200) {
           this.conversations = response.data;
-          this.renderConversations();
+          this.filterConversations();
         }
       } catch (error) {
         console.log("Error fetching conversations:", error);
       }
     },
 
-    //function to gen list conversation
+    filterConversations() {
+      const search = this.searchQuery.toLowerCase();
+      this.filteredConversations = this.conversations.filter((conversation) =>
+        conversation.conversationName.toLowerCase().includes(search)
+      );
+      this.renderConversations();
+    },
+
     renderConversations() {
       const container = document.getElementById("conversationListContainer");
       container.innerHTML = "";
 
-      this.conversations.forEach((conversation) => {
+      this.filteredConversations.forEach((conversation) => {
         const chatPeopleDiv = document.createElement("div");
         chatPeopleDiv.className = "chat_people";
 
@@ -72,14 +86,13 @@ export default {
         const chatTimeDiv = document.createElement("div");
         chatTimeDiv.className = "chat_date";
 
-        // if it's a old conversation
         if (conversation.lastMessage && conversation.lastMessage.trim() !== "") {
           p.innerText = conversation.lastMessage;
           chatTimeDiv.innerText = this.formatTime(conversation.lastMessageTime);
-        }
-        // else {
-        chatTimeDiv.innerText = this.formatTime(conversation.createdAt);
-        // }
+        } 
+       else {
+         chatTimeDiv.innerText = this.formatTime(conversation.createdAt);
+       }
 
         chatIbDiv.appendChild(span);
         chatIbDiv.appendChild(p);
@@ -105,12 +118,7 @@ export default {
         params: { conversationId },
       });
     },
-    // formatTime(time) {
-    //   const date = new Date(time)
-    //      const hours = date.getHours()
-    //   const minutes = date.getMinutes()
-    //   return `${hours} : ${minutes}`;
-    // }
+
     formatTime(time) {
       const date = new Date(time);
       const now = new Date();

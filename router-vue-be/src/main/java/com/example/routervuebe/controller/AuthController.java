@@ -7,9 +7,7 @@ import com.example.routervuebe.repository.UserRepository;
 import com.example.routervuebe.request.OTPRequest;
 import com.example.routervuebe.entity.OTP;
 import com.example.routervuebe.repository.OTPRepo;
-import com.example.routervuebe.request.UserRequest;
-import com.example.routervuebe.response.RegisterResponse;
-import com.example.routervuebe.response.UserResponse;
+
 import com.example.routervuebe.service.RegisterService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +33,10 @@ private RegisterService registerService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Users userRequest) {
-        return ResponseEntity.status(HttpStatus.OK).body( registerService.register(userRequest));
+        
+            Object response = registerService.register(userRequest);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 
     @PostMapping("/verify")
