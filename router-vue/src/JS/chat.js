@@ -3,6 +3,7 @@ export const chatState = {
     conversationName:null,
     title: null,
     memberCode:[],
-    selectedUsers: []
+    selectedUsers: [],
+    conversationId:null
   };
   

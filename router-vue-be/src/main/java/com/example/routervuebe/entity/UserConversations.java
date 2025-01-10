@@ -15,7 +15,7 @@ public class UserConversations {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne
-    @JoinColumn(name="userid")
+    @JoinColumn(name = "userid", referencedColumnName = "id")
     private Users userid;
     @ManyToOne
     @JoinColumn(name="conversationid")

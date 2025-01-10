@@ -1,7 +1,10 @@
 package com.example.routervuebe.repository;
 
+import com.example.routervuebe.entity.Conversations;
 import com.example.routervuebe.entity.UserConversations;
+import com.example.routervuebe.entity.Users;
 import com.example.routervuebe.response.ConversationResponse;
+import com.example.routervuebe.response.UserResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,5 +43,10 @@ public interface UserConversationRepo extends JpaRepository<UserConversations, I
             "ORDER BY COALESCE((SELECT MAX(m.timestamp) FROM Messages m WHERE m.conversation.id = c.id), c.createAt) DESC")
     List<ConversationResponse> findConversationsByUsername(@Param("username") String username);
 
+//@Query("SELECT u FROM Users u JOIN UserConversations uc ON u.id = uc.userid.id WHERE uc.conversationid.id = :conversationId")
+//List<Users> findUsersByConversationId(@Param("conversationId") int conversationId);
 
+    @Query("SELECT new com.example.routervuebe.response.UserResponse (u.id,u.username) " +
+            "FROM Users u JOIN UserConversations uc ON u.id = uc.userid.id WHERE uc.conversationid.id = :conversationId")
+List<UserResponse> findUsersByConversationId(@Param("conversationId") int conversationId);
 }
