@@ -10,7 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OTPRequest {
+    private String email;
     private String username;
     private String otp;
-    private String email;
+
 }
