@@ -12,4 +12,5 @@ import lombok.Setter;
 public class OTPRequest {
     private String username;
     private String otp;
+    private String email;
 }
