@@ -246,7 +246,7 @@ h2 {
     align-items: center
 }
 
-/* member in conversation */
+/* setting conversation */
 .name_conversation{
   width: 96%;
   display: flex;
@@ -265,4 +265,17 @@ h2 {
 .action_icon{
   width: 35px;
   margin-right: 10px;
+}
+
+/* member in group */
+#listMember{
+  padding: 10px;
+}
+.member_infor{
+  display: flex;
+  height: 60px;
+  align-items: center
+}
+.username{
+  margin-left: 10px;
 }

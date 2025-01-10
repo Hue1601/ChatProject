@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="action_group">
-        <div class="action" >
+        <div class="action" @click="$router.push('/member-in-group')">
             <img src="https://cdn0.iconfinder.com/data/icons/ui-22/24/177-512.png" class="action_icon" />
             <span>Them thanh vien</span>
         </div>
@@ -35,7 +35,7 @@
 <script>
 import axios from "axios";
 import { chatState } from "../../JS/chat.js";
-
+const baseUrl = "http://localhost:8080/api/chat/member-in-group";
 export default {
   name: "setting-group",
   props: ["conversationId"],
@@ -43,10 +43,15 @@ export default {
     return {
       activeConversationName: chatState.conversationName.replace(/"/g, ""),
       activeConversationId: chatState.conversationId,
+      
     };
   },
-  mounted() {},
+  mounted() {
+  
+    
+  },
   methods: {
+   
     back() {
       this.$router.push(`/conversation_detail/${this.activeConversationId}`);
     },

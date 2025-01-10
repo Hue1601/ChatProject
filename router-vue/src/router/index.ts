@@ -76,11 +76,11 @@ const router = createRouter({
       name: 'setting-group',
       component: () => import('../views/chat/setting_group.vue')
     },
-    // {
-    //   path: '/member-in-group',
-    //   name: 'member-in-group',
-    //   component: () => import('../views/chat/member_in_group.vue')
-    // }
+    {
+      path: '/member-in-group',
+      name: 'member-in-group',
+      component: () => import('../views/chat/member_in_group.vue')
+    }
   ]
 })
 
