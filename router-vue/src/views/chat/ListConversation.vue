@@ -90,7 +90,8 @@ export default {
         const p = document.createElement("p")
         p.className="chat_time";
 
-        if (conversation.lastMessage && conversation.lastMessage.trim() !== "") {
+        // if (conversation.lastMessage && conversation.lastMessage.trim() !== "") {
+          if (conversation.lastMessageTime) {
           lastMessage.innerText = conversation.lastMessage;
           p.innerText = this.formatTime(conversation.lastMessageTime);
         } 

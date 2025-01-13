@@ -73,8 +73,7 @@ export default {
         },
       });
       if(response.status === 200 ){
-        alert("sucessfulsucessful")
-        this.$router.push("list-conversation")
+        this.$router.push("/list_conversation")
       }
     },
 
