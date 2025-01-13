@@ -68,7 +68,7 @@ export default {
         }
     },
     async deleteMessage(){
-      
+      try{
           const response = await axios.delete(`${baseUrl}/delete-conversation/${this.activeConversationId}`, {
         headers: {
           Authorization: `Bearer ${this.token}`,
@@ -77,9 +77,12 @@ export default {
       if(response.status === 200 ){
         this.$router.push("/list_conversation")
       }
+    }catch(e){
+        alert("Fail to delete message: " + e.message)
+    }
     },
 async leaveGroup(){
-  console.log("ownerCode " + this.ownerCode)
+   try{
           const response = await axios.delete(`${baseUrl}/leave-group/${this.activeConversationId}?userId=${this.ownerCode}`, {
         headers: {
           Authorization: `Bearer ${this.token}`,
@@ -88,6 +91,9 @@ async leaveGroup(){
       if(response.status === 200 ){
         this.$router.push("/list_conversation")
       }
+   }catch(e){
+    alert("Fail to leave grouup " + e)
+   }
     },
     back() {
       this.$router.push(`/conversation_detail/${this.activeConversationId}`);
