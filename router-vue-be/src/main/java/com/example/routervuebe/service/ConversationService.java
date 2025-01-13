@@ -48,6 +48,7 @@ public class ConversationService {
             UserConversations userConversation = new UserConversations();
             userConversation.setUserid(user);
             userConversation.setConversationid(conversation);
+
             userConversationRepo.save(userConversation);
         }
         return conversation;
@@ -59,6 +60,7 @@ public class ConversationService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Conversations conversation = conversationRepo.findById(request.getConversation())
                 .orElseThrow(() -> new RuntimeException("Conversation not found"));
+        conversation.setCreateAt(LocalDateTime.now());
 
         Messages messages = new Messages();
         messages.setMessagetext(request.getMessageText());

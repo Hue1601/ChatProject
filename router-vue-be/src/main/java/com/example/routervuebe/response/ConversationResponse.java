@@ -15,7 +15,6 @@ public class ConversationResponse {
     private int id;
     private String conversationName;
     private String type;
-    private LocalDateTime createdAt;
     private LocalDateTime lastMessageTime;
     private String lastMessage;
 

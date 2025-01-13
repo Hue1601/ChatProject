@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface UserConversationRepo extends JpaRepository<UserConversations, Integer> {
-    
+
 //    @Query("SELECT new com.example.routervuebe.response.ConversationResponse(" +
 //            "c.id, " +
 //            "c.conversationName, " +
@@ -32,19 +32,13 @@ public interface UserConversationRepo extends JpaRepository<UserConversations, I
             "c.conversationName, " +
             "c.type, " +
             "c.createAt, " +
-            "c.updateAt, " +
             "(SELECT m.messagetext FROM Messages m WHERE m.conversation.id = c.id ORDER BY m.timestamp DESC LIMIT 1)) " +
             "FROM Conversations c " +
             "JOIN c.userConversations uc " +
             "JOIN uc.userid u " +
             "WHERE u.username = :username " +
-            "ORDER BY c.updateAt DESC")
+            "ORDER BY c.createAt DESC")
     List<ConversationResponse> findConversationsByUsername(@Param("username") String username);
-
-
-
-
-
 
 
     @Query("SELECT new com.example.routervuebe.response.UserResponse (u.id,u.username) " +

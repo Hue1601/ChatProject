@@ -24,9 +24,6 @@ public class Conversations {
     @Column(name="create_at")
     private LocalDateTime createAt;
 
-    @Column(name="update_at")
-    private LocalDateTime updateAt;
-
     @OneToMany(mappedBy = "conversationid")
     private List<UserConversations> userConversations;
 }
