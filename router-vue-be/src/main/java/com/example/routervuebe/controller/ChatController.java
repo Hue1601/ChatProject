@@ -1,6 +1,7 @@
 package com.example.routervuebe.controller;
 
 import com.example.routervuebe.entity.Users;
+import com.example.routervuebe.exception.MessageError;
 import com.example.routervuebe.repository.ConversationsRepo;
 import com.example.routervuebe.repository.UserConversationRepo;
 import com.example.routervuebe.request.MessageRequest;
@@ -91,14 +92,18 @@ private ConversationsRepo conversationsRepo;
         return ResponseEntity.ok(users);
     }
     @DeleteMapping("/delete-conversation/{conversationId}")
-    public ResponseEntity<String> deleteConversation(@PathVariable int conversationId) {
-        try {
+    public ResponseEntity<?> deleteConversation(@PathVariable int conversationId) {
            messagesRepo.deleteMessagesByConversationId(conversationId);
-//            messagesRepo.updateMessagesTextByConversationId(conversationId);
-            return ResponseEntity.ok("Conversation and its messages deleted successfully.");
-        } catch (Exception e) {
-           return ResponseEntity.status(500).body(e.getMessage());
+            return ResponseEntity.ok(MessageError.DELETE_MESSAGE);
+    }
 
+    @DeleteMapping("/leave-group/{conversationId}")
+    public ResponseEntity<?> leaveGroup(@PathVariable int conversationId, @RequestParam int userId) {
+        int rowsAffected = userConversationRepo.leaveConversation(userId, conversationId);
+        if (rowsAffected > 0) {
+            return ResponseEntity.ok(MessageError.LEAVE_GROUP);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User is not part of the conversation.");
         }
     }
 

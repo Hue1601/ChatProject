@@ -4,12 +4,14 @@ import com.example.routervuebe.entity.UserConversations;
 import com.example.routervuebe.response.ConversationResponse;
 import com.example.routervuebe.response.UserResponse;
 import jakarta.transaction.Transactional;
+import org.antlr.v4.runtime.atn.SemanticContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserConversationRepo extends JpaRepository<UserConversations, Integer> {
 
@@ -43,11 +45,11 @@ public interface UserConversationRepo extends JpaRepository<UserConversations, I
 
     @Query("SELECT new com.example.routervuebe.response.UserResponse (u.id,u.username) " +
             "FROM Users u JOIN UserConversations uc ON u.id = uc.userid.id WHERE uc.conversationid.id = :conversationId")
-List<UserResponse> findUsersByConversationId(@Param("conversationId") int conversationId);
-
+    List<UserResponse> findUsersByConversationId(@Param("conversationId") int conversationId);
 
     @Modifying
     @Transactional
-@Query("DELETE FROM UserConversations uc WHERE uc.conversationid.id = :conversationId")
-void deleteUCByConversationId(@Param("conversationId") int conversationId);
+    @Query("DELETE FROM UserConversations uc WHERE uc.userid.id = :userid AND uc.conversationid.id = :conversationId")
+    int leaveConversation(@Param("userid") int userId, @Param("conversationId") int conversationId);
+
 }

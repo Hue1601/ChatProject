@@ -15,7 +15,7 @@ public interface MessagesRepo extends JpaRepository<Messages,Integer> {
             "JOIN m.iduser u " +
             "WHERE m.conversation.id = :conversationId")
     List<ConversationDetailResponse> getConversationDetail(@Param("conversationId") Integer conversationId);
-    
+
     @Modifying
     @Transactional
     @Query("DELETE FROM Messages m WHERE m.conversation.id = :conversationId")

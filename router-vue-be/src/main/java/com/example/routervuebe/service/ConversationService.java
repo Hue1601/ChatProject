@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -77,15 +78,4 @@ public class ConversationService {
         );
     }
 
-    @Transactional
-    public void deleteConversation(int conversationId) {
-        // Delete all messages related to the conversation
-        messagesRepo.deleteMessagesByConversationId(conversationId);
-
-        // Delete all user-conversation relationships
-        userConversationRepo.deleteUCByConversationId(conversationId);
-
-        // Delete the conversation itself
-        conversationRepo.deleteConversationById(conversationId);
-    }
 }
