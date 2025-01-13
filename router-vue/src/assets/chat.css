@@ -103,19 +103,32 @@
 }
 .message_send{
   display: flex;
-  justify-content: end;
   margin-bottom: 10px;
+  width: 70%; 
+  margin-left: auto;
+  border-radius: 10px; 
+  justify-content: end;
 }
 .message_receive {
   display: flex;
   max-width: 90%;
   margin-bottom: 10px;
 }
+.cover_message{
+  display: contents;
+}
+.cover_name_message{
+  /* display: flex;
+  flex-direction: column; */
+}
 .send_bubble,
 .received_bubble {
   background: #ffffff;
   padding: 10px;
   border-radius: 5%;
+  width: fit-content;
+  max-width: 100%;
+  word-wrap: break-word;
 }
 .send_bubble p,
 .received_bubble p{
@@ -259,8 +272,9 @@ h2 {
 }
 .action{
   height: 55px;
-  display: flex;
+  display: none;
   align-items: center;
+
 }
 .action_icon{
   width: 35px;
@@ -268,9 +282,7 @@ h2 {
 }
 
 /* member in group */
-#listMember{
-  padding: 10px;
-}
+
 .member_infor{
   display: flex;
   height: 60px;

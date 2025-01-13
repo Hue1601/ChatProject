@@ -64,7 +64,7 @@ const router = createRouter({
     {
       path: '/setting',
       name: 'setting',
-      component: () => import('../views/chat/SettingGroup.vue')
+      component: () => import('../views/chat/SetupGroupProfile.vue')
     },
     {
       path: '/register',
