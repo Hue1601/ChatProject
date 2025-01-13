@@ -1,8 +1,13 @@
 <template>
+<div>
+ <div style="background: rgb(236 236 236)">
+      <img src="https://www.svgrepo.com/show/305142/arrow-ios-back.svg" class="icon_back" @click="$router.push('/setting-group')"/>
+    </div>
   <div style="padding:20px">
     <h5>Thành viên trong nhóm</h5>
     <div id="listMember"></div>
   </div>
+</div>
 </template>
 
 <script>

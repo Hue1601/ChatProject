@@ -1,7 +1,9 @@
 package com.example.routervuebe.repository;
 import com.example.routervuebe.entity.Messages;
 import com.example.routervuebe.response.ConversationDetailResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -14,4 +16,10 @@ public interface MessagesRepo extends JpaRepository<Messages,Integer> {
             "WHERE m.conversation.id = :conversationId")
     List<ConversationDetailResponse> getConversationDetail(@Param("conversationId") Integer conversationId);
 
+    @Query("UPDATE Messages m SET m.messagetext='' WHERE m.conversation.id = :id ")
+    List<Messages> deleteMessage(@Param("id") Integer id);
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Messages m WHERE m.conversation.id = :conversationId")
+    void deleteMessagesByConversationId(@Param("conversationId") int conversationId);
 }

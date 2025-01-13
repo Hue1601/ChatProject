@@ -11,6 +11,7 @@ import com.example.routervuebe.repository.UserConversationRepo;
 import com.example.routervuebe.repository.UserRepository;
 import com.example.routervuebe.request.MessageRequest;
 import com.example.routervuebe.response.MessageResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -72,5 +73,17 @@ public class ConversationService {
                 messages.getMessagetype(),
                 messages.getTimestamp()
         );
+    }
+
+    @Transactional
+    public void deleteConversation(int conversationId) {
+        // Delete all messages related to the conversation
+        messagesRepo.deleteMessagesByConversationId(conversationId);
+
+        // Delete all user-conversation relationships
+        userConversationRepo.deleteUCByConversationId(conversationId);
+
+        // Delete the conversation itself
+        conversationRepo.deleteConversationById(conversationId);
     }
 }
