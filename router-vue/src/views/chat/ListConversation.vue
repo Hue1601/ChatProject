@@ -73,7 +73,7 @@ export default {
         chatPeopleDiv.className = "chat_people";
 
         const images = document.createElement("img");
-        images.src = "https://ptetutorials.com/images/user-profile.png";
+        images.src = "/images/Avt.png";
         images.className = "chat_img";
 
         const chatIbDiv = document.createElement("div");

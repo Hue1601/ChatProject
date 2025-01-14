@@ -133,6 +133,7 @@ export default {
       listUser.innerHTML = "";
 
       this.filteredUsers.forEach((user) => {
+        
         const div = document.createElement("div");
         div.className = "user_infor";
         

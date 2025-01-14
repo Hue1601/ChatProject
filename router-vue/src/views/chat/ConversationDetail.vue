@@ -1,21 +1,19 @@
 <template>
   <div class="container_detail" style="height: 100vh">
     <div class="header_detail">
-      <div
-        style="width: 15%; margin-left: 17px"
+        <img  class="icon_back"
         @click="this.$router.push({ name: 'list_conversation' })"
-      >
-        <img src="/images/back.png" alt="" />
-      </div>
+        src="/images/undo.png" alt="" />
+      
       <div class="chat_title">
         <img
-          src="https://ptetutorials.com/images/user-profile.png"
+          src="/images/Avt.png"
           class="avatar_header"
         />
         <span class="last_message">{{ activeConversationName }}</span>
       </div>
       <img
-        src="https://cdn3.iconfinder.com/data/icons/ui-ux-web-application-simplicon-set/102/information-512.png"
+        src="/images/setting.png"
         style="width: 30px"
         @click="setting()"
       />
@@ -131,7 +129,7 @@ export default {
         if (!isSendMessage) {
           const img = document.createElement("img");
           img.className = "avatar_member";
-          img.src = "https://ptetutorials.com/images/user-profile.png";
+          img.src = "/images/Avt.png";
 
           if (type) {
             const username = document.createElement("span");

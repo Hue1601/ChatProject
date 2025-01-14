@@ -2,7 +2,7 @@
   <div>
     <div style="background: rgb(236 236 236); display: flex">
       <img
-        src="https://www.svgrepo.com/show/305142/arrow-ios-back.svg"
+        src="/images/undo.png"
         class="icon_back"
         @click="back()"
       />
@@ -13,7 +13,7 @@
     <div class="action_group">
       <div class="action" id="addMember" @click="addMemberToGroup('group')">
         <img
-          src="https://cdn0.iconfinder.com/data/icons/ui-22/24/177-512.png"
+          src="/images/add-member.png"
           class="action_icon"
         />
         <span>Thêm thành viên </span>
@@ -24,21 +24,21 @@
         @click="$router.push('/member-in-group')"
       >
         <img
-          src="https://cdn1.iconfinder.com/data/icons/jumpicon-basic-ui-line-1/32/-_Hamburger-Menu-More-Navigation-List-512.png"
+          src="/images/list-member.png"
           class="action_icon"
         />
         <span>Danh sách thành viên</span>
       </div>
       <div class="action" id="deleteMessage" @click="deleteMessage()">
         <img
-          src="https://cdn3.iconfinder.com/data/icons/font-awesome-regular-1/512/trash-can-512.png"
+          src="/images/trash.png"
           class="action_icon"
         />
         <span>Xóa tin nhắn</span>
       </div>
       <div class="action" id="leaveGroup" @click="leaveGroup()">
         <img
-          src="https://cdn0.iconfinder.com/data/icons/arrows-pack-30/16/log_out_arrow_exit_ui_check_out_go_out_leave_output_square-512.png"
+          src="/images/leave.png"
           class="action_icon"
         />
         <span>Rời nhóm</span>
