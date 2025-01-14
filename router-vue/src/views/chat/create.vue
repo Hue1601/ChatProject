@@ -36,7 +36,9 @@
         <table class="table">
           <tbody id="listUser">
             <tr v-for="user in filteredUsers" :key="user.id">
-              <td :class="{ disable: isOwner(user.id) }">{{ user.username }}</td>
+              <td :class="{ disable: isOwner(user.id) }">
+                {{ user.username }}
+              </td>
               <td class="checkbox">
                 <input
                   type="checkbox"
@@ -58,7 +60,7 @@
 import CompHeader from "../../components/CompHeader.vue";
 import axios from "axios";
 import { chatState } from "../../JS/chat.js";
-
+import { chatTypeEnum, CommonEnum } from "../../JS/Common.js";
 
 const baseUrl = "http://localhost:8080/api";
 
@@ -66,24 +68,28 @@ export default {
   name: "create",
   data() {
     return {
-      users: [], 
-      filteredUsers: [], 
-      search: "", // Search input
+      users: [],
+      filteredUsers: [],
+      search: "",
       token: localStorage.getItem("token"),
     };
   },
   components: {
     CompHeader,
   },
+  mounted() {
+    this.GetListUser();
+  },
   methods: {
+    //set chat type for btn group/private
     setChatType(type) {
       chatState.chatType = type;
       const btnPrivate = document.getElementById("btnPrivate");
       const btnGroup = document.getElementById("btnGroup");
       const tableListUser = document.getElementById("tableListUser");
-      tableListUser.style.display = "block";
+      tableListUser.style.display = CommonEnum.BLOCK;
 
-      if (type === "group") {
+      if (type === chatTypeEnum.GROUP) {
         btnGroup.classList.add("active");
         btnPrivate.classList.remove("active");
       } else {
@@ -108,10 +114,10 @@ export default {
 
         if (response.status === 200) {
           this.users = response.data;
-          this.filteredUsers = this.users; 
+          this.filteredUsers = this.users;
         }
       } catch (error) {
-        console.error("Error fetching users:", error);
+        alert("Error fetching users:", error);
       }
     },
 
@@ -130,7 +136,7 @@ export default {
     async handleCheckbox(event, user) {
       const chatType = chatState.chatType;
 
-      if (chatType === "private") {
+      if (chatType === chatTypeEnum.PRIVATE) {
         const checkboxes = document.querySelectorAll(".checkboxs");
 
         checkboxes.forEach((cb) => {
@@ -139,18 +145,21 @@ export default {
           }
         });
         chatState.selectedUsers = event.target.checked ? [user] : [];
+
+        return;
+      }
+
+      // handle checkbox with chat type is group
+      if (event.target.checked) {
+        chatState.selectedUsers.push(user);
       } else {
-        if (event.target.checked) {
-          chatState.selectedUsers.push(user);
-        } else {
-          chatState.selectedUsers = chatState.selectedUsers.filter(
-            (selectedUser) => selectedUser.id !== user.id
-          );
-        }
-        chatState.memberCode = chatState.selectedUsers.map(
-          (selectedUser) => selectedUser.id
+        chatState.selectedUsers = chatState.selectedUsers.filter(
+          (selectedUser) => selectedUser.id !== user.id
         );
       }
+      // chatState.memberCode = chatState.selectedUsers.map(
+      //   (selectedUser) => selectedUser.id
+      // );
     },
 
     async createConversation() {
@@ -160,58 +169,70 @@ export default {
       const ownerCode = localStorage.getItem("ownerCode");
 
       try {
-        if (chatType === "private") {
-          const response = await axios.get(
-            `${baseUrl}/chat/list-conversation`,
-            {
-              headers: {
-                Authorization: `Bearer ${this.token}`,
-              },
-            }
-          );
+        if (chatType === chatTypeEnum.PRIVATE) {
+          //Filter all users before creating new chats
+          const isUserExist = await this.filterExistUser(title);
 
-          if (response.status === 200) {
-            const existingConversation = response.data.find(
-              (conversation) =>
-                conversation.type === "private" &&
-                conversation.conversationName.includes(title)
-            );
-
-            if (existingConversation) {
-              alert("A private chat with this user already exists.");
-              return;
-            }
+          if (isUserExist) {
+            return;
           }
 
-          const payload = {
-            name: title,
-            type: chatType,
-            member: [Number(ownerCode), Number(userCode)],
-          };
-
-          const createResponse = await axios.post(
-            `${baseUrl}/chat/create-conversation`,
-            payload,
-            {
-              headers: {
-                Authorization: `Bearer ${this.token}`,
-              },
-            }
-          );
-
-          if (createResponse.status === 200) {
-            this.$router.push("/list_conversation");
-          }
-        } else {
-          this.$router.push("/setting");
+          await this.createNewConversation({title,chatType,ownerCode,userCode,});
+          return;
         }
+
+        //if chat type is group 
+        this.$router.push("/setting");
       } catch (error) {
-        console.error("Error creating conversation:", error.response || error);
+        alert("Error creating conversation:", error.response || error);
       }
     },
-  },
-  mounted() {
-    this.GetListUser();
+
+    async filterExistUser(title) {
+      const response = await axios.get(`${baseUrl}/chat/list-conversation`, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        const existingConversation = response.data.find(
+          (conversation) =>
+            conversation.type === "private" &&
+            conversation.conversationName.includes(title)
+        );
+
+        if (existingConversation) {
+          alert("A private chat with this user already exists.");
+          return true;
+        }
+      }
+      return false;
+    },
+    async createPrivateChat(title, chatType, ownerCode, userCode) {
+      const payload = {
+        name: title,
+        type: chatType,
+        member: [Number(ownerCode), Number(userCode)],
+      };
+      try {
+        const createResponse = await axios.post(
+          `${baseUrl}/chat/create-conversation`,
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        );
+
+        if (createResponse.status === 200) {
+          this.$router.push("/list_conversation");
+        }
+      } catch {
+        alert("Error create private conversation");
+      }
+    },
   },
 };
 </script>
