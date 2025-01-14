@@ -33,24 +33,7 @@
             Create
           </button>
         </div>
-        <table class="table">
-          <tbody id="listUser">
-            <tr v-for="user in filteredUsers" :key="user.id">
-              <td :class="{ disable: isOwner(user.id) }">
-                {{ user.username }}
-              </td>
-              <td class="checkbox">
-                <input
-                  type="checkbox"
-                  class="checkboxs"
-                  :userCode="user.id"
-                  :disabled="isOwner(user.id)"
-                  @click="handleCheckbox($event, user)"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div id="listUser"></div>
       </div>
     </div>
   </div>
@@ -115,6 +98,32 @@ export default {
         if (response.status === 200) {
           this.users = response.data;
           this.filteredUsers = this.users;
+
+          const listUser = document.getElementById("listUser");
+          this.users.forEach((user) => {
+            const div = document.createElement("div");
+            div.className = "user_infor";
+
+            const username = document.createElement("span");
+            username.innerText = user.username;
+
+            const cb = document.createElement("input");
+            cb.type = "checkbox";
+            cb.onclick = (event) => this.handleCheckbox(event, user);
+
+            div.appendChild(username);
+            div.appendChild(cb);
+
+            listUser.appendChild(div);
+          });
+
+          if (chatState.chatType === chatTypeEnum.GROUP) {
+            const memberAlredayInGroup = chatState.memberInGroup.some(
+              (member) => member.id === user.id
+            );
+            if (memberAlredayInGroup) {
+            }
+          }
         }
       } catch (error) {
         alert("Error fetching users:", error);
@@ -228,7 +237,6 @@ export default {
         );
 
         if (createResponse.status === 200) {
-          
           //clear chat state after create
           chatState.chatType = null;
           chatState.selectedUsers = null;
