@@ -157,9 +157,9 @@ export default {
           (selectedUser) => selectedUser.id !== user.id
         );
       }
-      // chatState.memberCode = chatState.selectedUsers.map(
-      //   (selectedUser) => selectedUser.id
-      // );
+      chatState.memberCode = chatState.selectedUsers.map(
+        (selectedUser) => selectedUser.id
+      );
     },
 
     async createConversation() {
@@ -177,12 +177,13 @@ export default {
             return;
           }
 
-          await this.createNewConversation({title,chatType,ownerCode,userCode,});
-          return;
+          await this.createPrivateChat(title, chatType, ownerCode, userCode);
         }
 
-        //if chat type is group 
-        this.$router.push("/setting");
+        //if chat type is group
+        if (chatType !== chatTypeEnum.PRIVATE) {
+          this.$router.push("/setting");
+        }
       } catch (error) {
         alert("Error creating conversation:", error.response || error);
       }
@@ -227,6 +228,11 @@ export default {
         );
 
         if (createResponse.status === 200) {
+          
+          //clear chat state after create
+          chatState.chatType = null;
+          chatState.selectedUsers = null;
+
           this.$router.push("/list_conversation");
         }
       } catch {
