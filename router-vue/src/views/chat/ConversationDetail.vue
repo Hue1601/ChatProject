@@ -195,9 +195,9 @@ export default {
 
   this.stompClient.debug = (str) => console.log(str);
   this.stompClient.connect(
-      // {
-      //     Authorization:`Bearer ${this.token}`
-      // },
+      {
+          Authorization:`Bearer ${this.token}`
+      },
       () => {
       this.stompClient.subscribe(`/topic/response`, (message) => {
           const messageData = JSON.parse(message.body);
