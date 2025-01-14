@@ -99,7 +99,6 @@ export default {
           name: groupName,
           type: chatType,
           member: [Number(ownerCode), ...userCodes],
-          //  member: [Number(ownerCode),userCodes],
         };
 
         const response = await axios.post(

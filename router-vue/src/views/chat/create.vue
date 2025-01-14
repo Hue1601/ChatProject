@@ -214,7 +214,7 @@ export default {
         if (chatType !== chatTypeEnum.PRIVATE) {
           console.log("add " + chatState.isAddMember)
           if (chatState.isAddMember === true) {
-            this.addMember()
+            await this.addMember()
             return;
           }
           this.$router.push("/setting");

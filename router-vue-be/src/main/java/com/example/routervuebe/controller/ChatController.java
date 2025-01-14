@@ -71,12 +71,6 @@ public class ChatController {
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
-    //    http://localhost:8080/detail-conversation?id=1
-//    @GetMapping("/detail-conversation")
-//    public List<Messages> getConversationDetails(@RequestParam Integer id) {
-//        return messagesRepo.getConversationDetail(id);
-//    }
-
     @PostMapping("/create-conversation")
     public ResponseEntity<?> createConversation(@RequestBody Map<String, Object> requestBody) {
         try {

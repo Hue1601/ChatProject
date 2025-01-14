@@ -286,7 +286,6 @@ export default {
           this.scrollToBottom();
         }
       } catch (error) {
-        console.error("Error sending message:", error);
         alert("Failed to send the message. Please try again.");
       }
     },

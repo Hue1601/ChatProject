@@ -138,7 +138,7 @@ export default {
         console.log("isAddMember" +  chatState.isAddMember)
         this.$router.push("/create");
       } catch (e) {
-        console.error("Failed to fetch members in group:", e.message);
+        alert("Failed to fetch members in group:")
       }
     },
     back() {
