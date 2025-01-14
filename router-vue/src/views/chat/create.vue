@@ -23,7 +23,6 @@
         <div class="action_create">
           <input
             class="form-control me-2"
-            type="search"
             placeholder="Search"
             aria-label="Search"
             v-model="search"
@@ -87,7 +86,7 @@ export default {
       chatState.selectedUsers = [];
     },
 
-    async GetListUser() {
+       async GetListUser() {
       try {
         const response = await axios.get(`${baseUrl}/user/list`, {
           headers: {
@@ -97,33 +96,8 @@ export default {
 
         if (response.status === 200) {
           this.users = response.data;
-          this.filteredUsers = this.users;
-
-          const listUser = document.getElementById("listUser");
-          this.users.forEach((user) => {
-            const div = document.createElement("div");
-            div.className = "user_infor";
-
-            const username = document.createElement("span");
-            username.innerText = user.username;
-
-            const cb = document.createElement("input");
-            cb.type = "checkbox";
-            cb.onclick = (event) => this.handleCheckbox(event, user);
-
-            div.appendChild(username);
-            div.appendChild(cb);
-
-            listUser.appendChild(div);
-          });
-
-          if (chatState.chatType === chatTypeEnum.GROUP) {
-            const memberAlredayInGroup = chatState.memberInGroup.some(
-              (member) => member.id === user.id
-            );
-            if (memberAlredayInGroup) {
-            }
-          }
+          this.filteredUsers = [...this.users]; // Ban đầu danh sách lọc giống toàn bộ
+          this.renderListUser();
         }
       } catch (error) {
         alert("Error fetching users:", error);
@@ -135,8 +109,30 @@ export default {
       this.filteredUsers = this.users.filter((user) =>
         user.username.toLowerCase().includes(searchLower)
       );
+      this.renderListUser(); 
     },
 
+    renderListUser() {
+      const listUser = document.getElementById("listUser");
+      listUser.innerHTML = "";
+
+      this.filteredUsers.forEach((user) => {
+        const div = document.createElement("div");
+        div.className = "user_infor";
+
+        const username = document.createElement("span");
+        username.innerText = user.username;
+
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.onclick = (event) => this.handleCheckbox(event, user);
+
+        div.appendChild(username);
+        div.appendChild(cb);
+
+        listUser.appendChild(div);
+      });
+    },
     isOwner(userId) {
       const ownerCode = Number(localStorage.getItem("ownerCode"));
       return userId === ownerCode;
