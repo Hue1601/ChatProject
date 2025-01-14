@@ -4,6 +4,9 @@ export const chatState = {
     title: null,
     memberCode:[],
     selectedUsers: [],
-    conversationId:null
+    conversationId:null,
+    memberInGroup:[],
+    isAddMember :false,
   };
+ 
   

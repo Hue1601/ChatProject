@@ -1,62 +1,74 @@
 /* list_conversation */
 .container {
-    max-width: 100%;
-  }
-  .body {
-    max-height: 400px;
-    overflow-y: auto;
-  }
-  
-  .chat_img {
-    width: 50px;
-    height: 50px;
-  }
-  .conversation_name {
-    font-size: 14px;
-    font-weight: 500;
-    width: 97%;
-  }
-  .chat_ib {
-    float: left;
-    padding: 0 0 0 15px;
-    width: 92%;
-  }
-  .chat_date {
-    font-size: 12px;
-  }
-  .search_bar {
-    width: 100%;
-    height: 40px;
-  }
-  .nameuser {
-    border-bottom: 1px solid #c4c4c4;
-    padding: 0 15px;
-  }
-  .chat_people {
-    display: flex;
-    margin-top: 10px;
-    height: 60px;
-  }
-.chat_time{
+  max-width: 100%;
+}
+
+.body {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.chat_img {
+  width: 50px;
+  height: 50px;
+}
+
+.conversation_name {
+  font-size: 14px;
+  font-weight: 500;
+  width: 97%;
+}
+
+.chat_ib {
+  float: left;
+  padding: 0 0 0 15px;
+  width: 92%;
+}
+
+.chat_date {
+  font-size: 12px;
+}
+
+.search_bar {
+  width: 100%;
+  height: 40px;
+}
+
+.nameuser {
+  border-bottom: 1px solid #c4c4c4;
+  padding: 0 15px;
+}
+
+.chat_people {
+  display: flex;
+  margin-top: 10px;
+  height: 60px;
+}
+
+.chat_time {
   text-align: end;
 }
-  /* conversation_detail */
-  .header_detail{
-    height: 56px;
-    width: 100%;
-    display: flex;
-    align-items: center;
+
+/* conversation_detail */
+.header_detail {
+  height: 56px;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
-.avatar_header{
+
+.avatar_header {
   width: 35px;
   height: 35px;
   margin-right: 10px;
 }
+
 .chat_title {
   display: flex;
   align-items: center;
   width: 80%;
 }
+
 .body_chat_detail {
   background: #f7f8fa;
   display: flex;
@@ -67,7 +79,8 @@
 .list_message {
   flex: 1;
   padding: 10px;
-  overflow-y: auto; /* Ensures scroll only when necessary */
+  overflow-y: auto;
+  /* Ensures scroll only when necessary */
 }
 
 .input_bar {
@@ -84,8 +97,8 @@
   max-height: 150px;
   flex: 1;
   border: none;
-  resize: none; 
-  overflow-y: auto; 
+  resize: none;
+  overflow-y: auto;
 }
 
 .send_btn {
@@ -99,7 +112,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 10px; /* Adds spacing between button and input */
+  margin-left: 10px;
+  /* Adds spacing between button and input */
 }
 
 .avatar_member {
@@ -107,25 +121,29 @@
   height: 30px;
   margin-right: 10px;
 }
+
 .member_name {
   color: #747474;
   display: block;
   font-size: 12px;
 }
-.message_send{
+
+.message_send {
   display: flex;
   margin-bottom: 10px;
-  width: 70%; 
+  width: 70%;
   margin-left: auto;
-  border-radius: 10px; 
+  border-radius: 10px;
   justify-content: end;
 }
+
 .message_receive {
   display: flex;
   max-width: 90%;
   margin-bottom: 10px;
 }
-.cover_message{
+
+.cover_message {
   display: contents;
 }
 
@@ -138,23 +156,27 @@
   max-width: 100%;
   word-wrap: break-word;
 }
+
 .send_bubble p,
-.received_bubble p{
-margin-bottom: 0;
-margin-top: 0;
+.received_bubble p {
+  margin-bottom: 0;
+  margin-top: 0;
 }
+
 .time_date {
   align-items: end;
-  display: flex ;
+  display: flex;
   color: #747474;
   font-size: 12px;
   padding-left: 5px;
   padding-right: 5px;
 }
+
 .message_content {
   margin-left: 10px;
   width: 70%;
 }
+
 .date_header {
   text-align: center;
   margin: 10px 0;
@@ -165,139 +187,165 @@ margin-top: 0;
 
 
 /* create */
-.pagination{
-  padding-left: 38%; 
+.pagination {
+  padding-left: 38%;
 }
-.btn-outline-primary{
- margin-right: 13px;
+
+.btn-outline-primary {
+  margin-right: 13px;
 }
-.list{
- height: 90vh;
- border: 1px solid  #c4c4c4;
+
+.list {
+  height: 90vh;
+  border: 1px solid #c4c4c4;
 }
+
 .border_button {
- margin-top: 10px;
- text-align: center;
+  margin-top: 10px;
+  text-align: center;
 
 }
-.card-header{
- height: 72vh;
- margin-left: 20px;
- margin-right: 20px;
+
+.card-header {
+  height: 72vh;
+  margin-left: 20px;
+  margin-right: 20px;
 }
-.card-header{
+
+.card-header {
   display: none;
   height: 72vh;
   margin-left: 20px;
   margin-right: 20px;
   margin-top: 15px;
 }
-.user_infor{
+
+.user_infor {
   display: flex;
-    justify-content: space-between;
+  justify-content: space-between;
+  height: 35px
 }
 
-.action_create{
+.action_create {
   display: flex;
+  margin-bottom: 10px;
 }
-.active{
+
+.active {
   background: #0d6efd;
   color: wheat;
 }
+
 .container {
   width: 25%;
   margin-top: 10px;
 }
+
 h2 {
   text-align: center;
 }
+
 /* create-conersation */
-.disable{
+.disable {
   pointer-events: none;
   opacity: 0.6;
 }
 
 /* setting conversation */
-.header_setup{
+.header_setup {
   display: flex;
 }
-.border_img{
+
+.border_img {
   margin-right: 13px;
   height: 80px;
   width: 80px;
 }
-#title{
+
+#title {
   height: 35px;
   width: 72%;
-   border: none;
+  border: none;
 }
-.icon_back{
+
+.icon_back {
   height: 35px;
   width: 35px;
 }
-#listMemberSelected{
+
+#listMemberSelected {
   display: flex;
 }
-.member_profile{
+
+.member_profile {
   margin-right: 10px;
   text-align: center
 }
-.member_avatar{
+
+.member_avatar {
   width: 50px;
   height: 50px;
 }
-.member_name{
+
+.member_name {
   width: 50.15px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.border_camera{
+
+.border_camera {
   width: 35px;
   display: flex;
   position: absolute;
   margin-left: 49px;
   margin-top: 62px;
 }
-.choose_image{
+
+.choose_image {
   width: 85px;
-    display: flex
+  display: flex
 }
-.header_setup{
+
+.header_setup {
   display: flex;
-    height: 80px;
-    align-items: center
+  height: 80px;
+  align-items: center
 }
 
 /* setting conversation */
-.name_conversation{
+.name_conversation {
   width: 96%;
   display: flex;
-    justify-content: center
+  justify-content: center
 }
-.action_group{
+
+.action_group {
   display: flex;
   flex-direction: column;
   padding: 10px;
 }
-.action{
+
+.action {
   height: 55px;
   display: none;
   align-items: center;
 
 }
-.action_icon{
+
+.action_icon {
   width: 35px;
   margin-right: 10px;
 }
 
 /* member in group */
 
-.member_infor{
+.member_infor {
   display: flex;
   height: 60px;
   align-items: center
 }
-.username{
+
+.username {
   margin-left: 10px;
 }

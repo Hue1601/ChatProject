@@ -54,12 +54,14 @@ export default {
       filteredUsers: [],
       search: "",
       token: localStorage.getItem("token"),
+      memberIn: chatState.memberInGroup,
     };
   },
   components: {
     CompHeader,
   },
   mounted() {
+    this.handleDisplayButton();
     this.GetListUser();
   },
   methods: {
@@ -69,6 +71,7 @@ export default {
       const btnPrivate = document.getElementById("btnPrivate");
       const btnGroup = document.getElementById("btnGroup");
       const tableListUser = document.getElementById("tableListUser");
+
       tableListUser.style.display = CommonEnum.BLOCK;
 
       if (type === chatTypeEnum.GROUP) {
@@ -86,7 +89,19 @@ export default {
       chatState.selectedUsers = [];
     },
 
-       async GetListUser() {
+    //display table in case add member to group
+    handleDisplayButton() {
+      if (chatState.isAddMember === true) {
+        const btnPrivate = document.getElementById("btnPrivate");
+        const btnGroup = document.getElementById("btnGroup");
+        const tableListUser = document.getElementById("tableListUser");
+        btnGroup.classList.add("active");
+        tableListUser.style.display = CommonEnum.BLOCK;
+        btnPrivate.style.display = CommonEnum.NONE;
+      }
+    },
+
+    async GetListUser() {
       try {
         const response = await axios.get(`${baseUrl}/user/list`, {
           headers: {
@@ -96,11 +111,12 @@ export default {
 
         if (response.status === 200) {
           this.users = response.data;
-          this.filteredUsers = [...this.users]; // Ban đầu danh sách lọc giống toàn bộ
+          this.filteredUsers = [...this.users];
           this.renderListUser();
         }
       } catch (error) {
-        alert("Error fetching users:", error);
+        // alert("Error fetching users:", error);
+        console.log("Error fetching users:", error);
       }
     },
 
@@ -109,7 +125,7 @@ export default {
       this.filteredUsers = this.users.filter((user) =>
         user.username.toLowerCase().includes(searchLower)
       );
-      this.renderListUser(); 
+      this.renderListUser();
     },
 
     renderListUser() {
@@ -120,6 +136,15 @@ export default {
         const div = document.createElement("div");
         div.className = "user_infor";
 
+        const memberAlreadyInGroup = chatState.memberInGroup.some(
+          (memberId) => memberId === user.id
+        );
+
+        if (chatState.chatType === chatTypeEnum.GROUP) {
+          if (this.isOwner(user.id) || memberAlreadyInGroup) {
+            div.classList.add("disable");
+          }
+        }
         const username = document.createElement("span");
         username.innerText = user.username;
 
@@ -187,6 +212,11 @@ export default {
 
         //if chat type is group
         if (chatType !== chatTypeEnum.PRIVATE) {
+          console.log("add " + chatState.isAddMember)
+          if (chatState.isAddMember === true) {
+            this.addMember()
+            return;
+          }
           this.$router.push("/setting");
         }
       } catch (error) {
@@ -215,6 +245,8 @@ export default {
       }
       return false;
     },
+
+    // create a new conversation with type private
     async createPrivateChat(title, chatType, ownerCode, userCode) {
       const payload = {
         name: title,
@@ -241,6 +273,29 @@ export default {
         }
       } catch {
         alert("Error create private conversation");
+      }
+    },
+
+    // add member to group
+    async addMember() {
+      const userCodes = chatState.memberCode;
+      console.log("userCodes: " + userCodes);
+      const response = await axios.post(
+        `${baseUrl}/chat/add-member`,
+        {
+          userId: userCodes,
+          groupId: chatState.conversationId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      );
+      if (response.statusCode === 200) {
+        chatState.memberCode = [];
+        chatState.isAddMember = false;
+        console.log("success");
       }
     },
   },

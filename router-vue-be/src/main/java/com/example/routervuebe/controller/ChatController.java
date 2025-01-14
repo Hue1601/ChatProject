@@ -1,9 +1,12 @@
 package com.example.routervuebe.controller;
 
+import com.example.routervuebe.entity.UserConversations;
 import com.example.routervuebe.entity.Users;
+import com.example.routervuebe.exception.AuthenticationException;
 import com.example.routervuebe.exception.MessageError;
 import com.example.routervuebe.repository.ConversationsRepo;
 import com.example.routervuebe.repository.UserConversationRepo;
+import com.example.routervuebe.request.AddMemberRequest;
 import com.example.routervuebe.request.MessageRequest;
 import com.example.routervuebe.response.ConversationResponse;
 import com.example.routervuebe.response.MessageResponse;
@@ -35,40 +38,44 @@ public class ChatController {
     private UserConversationRepo userConversationRepo;
     @Autowired
     private ConversationService conversationService;
-@Autowired
-private ConversationsRepo conversationsRepo;
-    @MessageMapping("/send-message")
-    @SendTo("/topic/response/conversation/{conversationId}") // Endpoint để phát tin nhắn tới các client
-    public MessageResponse sendMessage(MessageRequest request) {
-        try {
-            return conversationService.sendMessage(request);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to send message", e);
-        }
-    }
+    @Autowired
+    private ConversationsRepo conversationsRepo;
+
+    private  UserConversations userConversations;
+
+    //    @MessageMapping("/send-message")
+//    @SendTo("/topic/response/conversation/{conversationId}") // Endpoint để phát tin nhắn tới các client
+//    public MessageResponse sendMessage(MessageRequest request) {
+//        try {
+//            return conversationService.sendMessage(request);
+//        } catch (Exception e) {
+//            throw new RuntimeException("Failed to send message", e);
+//        }
+//    }
     @GetMapping("/list-conversation")
     public ResponseEntity<?> getConversationByUsername(HttpServletRequest request) {
         String username = (String) request.getAttribute("username");
         List<ConversationResponse> conversations = userConversationRepo.findConversationsByUsername(username);
         return ResponseEntity.ok(conversations);
     }
+
     @GetMapping("/detail-conversation/{conversationId}")
     public ResponseEntity<?> getConversationById(@PathVariable Integer conversationId) {
         return ResponseEntity.ok(messagesRepo.getConversationDetail(conversationId));
 
     }
-//    @PostMapping("/send-message")
-//    public ResponseEntity<?> sendMessage(@RequestBody MessageRequest request) {
-//        MessageResponse message = conversationService.sendMessage(request);
-//        return ResponseEntity.status(HttpStatus.OK).body(message);
-//    }
+
+    @PostMapping("/send-message")
+    public ResponseEntity<?> sendMessage(@RequestBody MessageRequest request) {
+        MessageResponse message = conversationService.sendMessage(request);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
 
     //    http://localhost:8080/detail-conversation?id=1
 //    @GetMapping("/detail-conversation")
 //    public List<Messages> getConversationDetails(@RequestParam Integer id) {
 //        return messagesRepo.getConversationDetail(id);
 //    }
-
 
     @PostMapping("/create-conversation")
     public ResponseEntity<?> createConversation(@RequestBody Map<String, Object> requestBody) {
@@ -89,10 +96,11 @@ private ConversationsRepo conversationsRepo;
         List<UserResponse> users = userConversationRepo.findUsersByConversationId(conversationId);
         return ResponseEntity.ok(users);
     }
+
     @DeleteMapping("/delete-conversation/{conversationId}")
     public ResponseEntity<?> deleteConversation(@PathVariable int conversationId) {
-           messagesRepo.deleteMessagesByConversationId(conversationId);
-            return ResponseEntity.ok(MessageError.DELETE_MESSAGE);
+        messagesRepo.deleteMessagesByConversationId(conversationId);
+        return ResponseEntity.ok(MessageError.DELETE_MESSAGE);
     }
 
     @DeleteMapping("/leave-group/{conversationId}")
@@ -104,5 +112,12 @@ private ConversationsRepo conversationsRepo;
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User is not part of the conversation.");
         }
     }
+
+    @PostMapping("/add-member")
+    public ResponseEntity<?> addMemberToGroup(@RequestBody AddMemberRequest request) {
+        conversationService.addMember(request);
+        return ResponseEntity.status(HttpStatus.OK).body(MessageError.SUCCESS);
+    }
+
 
 }

@@ -5,4 +5,5 @@ export const chatTypeEnum={
 export const CommonEnum={
     BLOCK: 'block',
     FLEX: 'flex',
+    NONE:'none'
 }

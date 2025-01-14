@@ -12,6 +12,9 @@ public enum MessageError {
     VALIDATE_PASSWORD("Password must contain at least one letter, one number, and one special character."),
     LEAVE_GROUP("Successfully left the group."),
     DELETE_MESSAGE("Delete conversation success."),
+    USER_NOT_FOUND("User not found."),
+    CONVERSATION_NOT_FOUND("Conversation not found."),
+    SUCCESS("Success."),
     INTERNAL_SERVER_ERROR("An internal server error occurred");
 
     private final String message;
