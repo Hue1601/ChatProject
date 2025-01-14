@@ -37,40 +37,38 @@ public class ChatController {
     private ConversationService conversationService;
 @Autowired
 private ConversationsRepo conversationsRepo;
-//    @MessageMapping("/chat.sendMessage") // Endpoint client gửi tin nhắn
-//    @SendTo("/topic/messages") // Endpoint để phát tin nhắn tới các client
-//    public MessageResponse sendMessage(MessageRequest request) {
-//        // Lưu tin nhắn vào DB và trả về tin nhắn cho tất cả client
-//      //  return conversationService.sendMessage(request);
-//        try {
-//            return conversationService.sendMessage(request);
-//        } catch (Exception e) {
-//            // Handle exceptions and log error
-//            throw new RuntimeException("Failed to send message", e);
-//        }
-//    }
+    @MessageMapping("/send-message")
+    @SendTo("/topic/response/conversation/{conversationId}") // Endpoint để phát tin nhắn tới các client
+    public MessageResponse sendMessage(MessageRequest request) {
+        try {
+            return conversationService.sendMessage(request);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send message", e);
+        }
+    }
     @GetMapping("/list-conversation")
     public ResponseEntity<?> getConversationByUsername(HttpServletRequest request) {
         String username = (String) request.getAttribute("username");
         List<ConversationResponse> conversations = userConversationRepo.findConversationsByUsername(username);
         return ResponseEntity.ok(conversations);
     }
-    @PostMapping("/send-message")
-    public ResponseEntity<?> sendMessage(@RequestBody MessageRequest request) {
-        MessageResponse message = conversationService.sendMessage(request);
-        return ResponseEntity.status(HttpStatus.OK).body(message);
+    @GetMapping("/detail-conversation/{conversationId}")
+    public ResponseEntity<?> getConversationById(@PathVariable Integer conversationId) {
+        return ResponseEntity.ok(messagesRepo.getConversationDetail(conversationId));
+
     }
+//    @PostMapping("/send-message")
+//    public ResponseEntity<?> sendMessage(@RequestBody MessageRequest request) {
+//        MessageResponse message = conversationService.sendMessage(request);
+//        return ResponseEntity.status(HttpStatus.OK).body(message);
+//    }
 
     //    http://localhost:8080/detail-conversation?id=1
 //    @GetMapping("/detail-conversation")
 //    public List<Messages> getConversationDetails(@RequestParam Integer id) {
 //        return messagesRepo.getConversationDetail(id);
 //    }
-    @GetMapping("/detail-conversation/{conversationId}")
-    public ResponseEntity<?> getConversationById(@PathVariable Integer conversationId) {
-        return ResponseEntity.ok(messagesRepo.getConversationDetail(conversationId));
 
-    }
 
     @PostMapping("/create-conversation")
     public ResponseEntity<?> createConversation(@RequestBody Map<String, Object> requestBody) {

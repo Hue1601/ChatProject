@@ -82,10 +82,12 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
                 response.getWriter().write(objectMapper.writeValueAsString(MessageError.INVALID_EXPIRED_TOKEN));
                 return;
             }
-        } else {
-            // Nếu không có Authorization header, trả về lỗi
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write(objectMapper.writeValueAsString(MessageError.MISSING_TOKEN));
+        }
+        else {
+//            // Nếu không có Authorization header, trả về lỗi
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.getWriter().write(objectMapper.writeValueAsString(MessageError.MISSING_TOKEN));
+            response.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 

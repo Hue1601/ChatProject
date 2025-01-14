@@ -58,7 +58,6 @@ export default {
         console.log("type " + this.chatType)
         //  if(this.chatType === "private"){
          if(this.chatType === chatTypeEnum.PRIVATE){
-          document.getElementById("addMember").style.display='flex'
            document.getElementById("deleteMessage").style.display='flex'
         }else{
          document.getElementById("addMember").style.display='flex'
