@@ -59,38 +59,49 @@
 }
 .body_chat_detail {
   background: #f7f8fa;
-  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 93vh;
 }
+
 .list_message {
-  height: 85vh;
+  flex: 1;
   padding: 10px;
-  overflow-y: scroll;
+  overflow-y: auto; /* Ensures scroll only when necessary */
 }
+
 .input_bar {
   display: flex;
   border-top: 1px solid #c4c4c4;
   background: white;
-  min-height: 48px;
   align-items: center;
+  padding: 8px 10px;
 }
+
 .input_message {
   font-size: 15px;
   min-height: 40px;
-  width: 100%;
+  max-height: 150px;
+  flex: 1;
   border: none;
-  padding-right: 50px;
+  resize: none; 
+  overflow-y: auto; 
 }
+
 .send_btn {
   background: #05728f;
   border: none;
   border-radius: 50%;
   color: #fff;
   font-size: 17px;
-  height: 33px;
-  position: absolute;
-  right: 0;
-  width: 33px;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px; /* Adds spacing between button and input */
 }
+
 .avatar_member {
   width: 30px;
   height: 30px;
@@ -103,19 +114,29 @@
 }
 .message_send{
   display: flex;
-  justify-content: end;
   margin-bottom: 10px;
+  width: 70%; 
+  margin-left: auto;
+  border-radius: 10px; 
+  justify-content: end;
 }
 .message_receive {
   display: flex;
   max-width: 90%;
   margin-bottom: 10px;
 }
+.cover_message{
+  display: contents;
+}
+
 .send_bubble,
 .received_bubble {
   background: #ffffff;
   padding: 10px;
   border-radius: 5%;
+  width: fit-content;
+  max-width: 100%;
+  word-wrap: break-word;
 }
 .send_bubble p,
 .received_bubble p{
@@ -246,7 +267,7 @@ h2 {
     align-items: center
 }
 
-/* member in conversation */
+/* setting conversation */
 .name_conversation{
   width: 96%;
   display: flex;
@@ -259,10 +280,22 @@ h2 {
 }
 .action{
   height: 55px;
-  display: flex;
+  display: none;
   align-items: center;
+
 }
 .action_icon{
   width: 35px;
   margin-right: 10px;
+}
+
+/* member in group */
+
+.member_infor{
+  display: flex;
+  height: 60px;
+  align-items: center
+}
+.username{
+  margin-left: 10px;
 }

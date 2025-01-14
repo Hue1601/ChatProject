@@ -27,7 +27,7 @@ const router = createRouter({
     {
       path: '/list_conversation',
       name: 'list_conversation',
-      component: () => import('../views/chat/list_conversation.vue')
+      component: () => import('../views/chat/ListConversation.vue')
     }
     ,
     // {
@@ -38,7 +38,7 @@ const router = createRouter({
     {
       path: '/conversation_detail/:conversationId',
       name: 'conversation_detail',
-      component: () => import('../views/chat/conversation_detail.vue'),
+      component: () => import('../views/chat/ConversationDetail.vue'),
       props: true
     },
     {
@@ -49,7 +49,7 @@ const router = createRouter({
     {
       path: '/create',
       name: 'create',
-      component: () => import('../views/chat/create.vue')
+      component: () => import('../views/chat/Create.vue')
     },
     {
       path: '/user/add',
@@ -64,23 +64,23 @@ const router = createRouter({
     {
       path: '/setting',
       name: 'setting',
-      component: () => import('../views/chat/setting.vue')
+      component: () => import('../views/chat/SetupGroupProfile.vue')
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('../views/login/register.vue')
+      component: () => import('../views/login/Register.vue')
     },
      {
       path: '/setting-group',
       name: 'setting-group',
-      component: () => import('../views/chat/setting_group.vue')
+      component: () => import('../views/chat/SettingGroup.vue')
     },
-    // {
-    //   path: '/member-in-group',
-    //   name: 'member-in-group',
-    //   component: () => import('../views/chat/member_in_group.vue')
-    // }
+    {
+      path: '/member-in-group',
+      name: 'member-in-group',
+      component: () => import('../views/chat/MemberInGroup.vue')
+    }
   ]
 })
 

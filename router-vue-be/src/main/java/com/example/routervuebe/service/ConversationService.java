@@ -11,6 +11,7 @@ import com.example.routervuebe.repository.UserConversationRepo;
 import com.example.routervuebe.repository.UserRepository;
 import com.example.routervuebe.request.MessageRequest;
 import com.example.routervuebe.response.MessageResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -47,6 +49,7 @@ public class ConversationService {
             UserConversations userConversation = new UserConversations();
             userConversation.setUserid(user);
             userConversation.setConversationid(conversation);
+
             userConversationRepo.save(userConversation);
         }
         return conversation;
@@ -58,6 +61,7 @@ public class ConversationService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Conversations conversation = conversationRepo.findById(request.getConversation())
                 .orElseThrow(() -> new RuntimeException("Conversation not found"));
+        conversation.setCreateAt(LocalDateTime.now());
 
         Messages messages = new Messages();
         messages.setMessagetext(request.getMessageText());
@@ -73,4 +77,5 @@ public class ConversationService {
                 messages.getTimestamp()
         );
     }
+
 }

@@ -23,6 +23,7 @@ public class Conversations {
 
     @Column(name="create_at")
     private LocalDateTime createAt;
+
     @OneToMany(mappedBy = "conversationid")
     private List<UserConversations> userConversations;
 }

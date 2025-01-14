@@ -10,6 +10,8 @@ public enum MessageError {
     USERNAME_VALIDATE("Username is already in use."),
     EMAIL_VALIDATE("Email is already in use."),
     VALIDATE_PASSWORD("Password must contain at least one letter, one number, and one special character."),
+    LEAVE_GROUP("Successfully left the group."),
+    DELETE_MESSAGE("Delete conversation success."),
     INTERNAL_SERVER_ERROR("An internal server error occurred");
 
     private final String message;
