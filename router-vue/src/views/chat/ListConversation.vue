@@ -84,6 +84,7 @@ export default {
         span.innerText = conversation.conversationName.replace(/"/g, "");
 
         const lastMessage = document.createElement("p");
+        lastMessage.className = "last_message";
 
         const chatTimeDiv = document.createElement("div");
         chatTimeDiv.className = "chat_date";

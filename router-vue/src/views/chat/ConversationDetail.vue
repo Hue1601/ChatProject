@@ -12,7 +12,7 @@
           src="https://ptetutorials.com/images/user-profile.png"
           class="avatar_header"
         />
-        <span>{{ activeConversationName }}</span>
+        <span class="last_message">{{ activeConversationName }}</span>
       </div>
       <img
         src="https://cdn3.iconfinder.com/data/icons/ui-ux-web-application-simplicon-set/102/information-512.png"

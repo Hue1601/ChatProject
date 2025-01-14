@@ -23,6 +23,9 @@
   float: left;
   padding: 0 0 0 15px;
   width: 92%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chat_date {
@@ -47,6 +50,11 @@
 
 .chat_time {
   text-align: end;
+}
+.last_message{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* conversation_detail */
@@ -113,7 +121,6 @@
   align-items: center;
   justify-content: center;
   margin-left: 10px;
-  /* Adds spacing between button and input */
 }
 
 .avatar_member {
@@ -207,12 +214,6 @@
 }
 
 .card-header {
-  height: 72vh;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
-.card-header {
   display: none;
   height: 72vh;
   margin-left: 20px;
@@ -243,6 +244,13 @@
 
 h2 {
   text-align: center;
+}
+
+.user_name {
+  width: 81%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* create-conersation */
@@ -348,4 +356,8 @@ h2 {
 
 .username {
   margin-left: 10px;
+  width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

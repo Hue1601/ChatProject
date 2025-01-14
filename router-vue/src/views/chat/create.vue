@@ -135,13 +135,16 @@ export default {
       this.filteredUsers.forEach((user) => {
         const div = document.createElement("div");
         div.className = "user_infor";
-
+        
+        if (this.isOwner(user.id)) {
+          div.classList.add("disable");
+        }
         const memberAlreadyInGroup = chatState.memberInGroup.some(
           (memberId) => memberId === user.id
         );
 
-        if (chatState.chatType === chatTypeEnum.GROUP) {
-          if (this.isOwner(user.id) || memberAlreadyInGroup) {
+        if (chatState.chatType !== chatTypeEnum.GROUP) {
+          if (memberAlreadyInGroup) {
             div.classList.add("disable");
           }
         }
@@ -212,9 +215,9 @@ export default {
 
         //if chat type is group
         if (chatType !== chatTypeEnum.PRIVATE) {
-          console.log("add " + chatState.isAddMember)
+          console.log("add " + chatState.isAddMember);
           if (chatState.isAddMember === true) {
-            await this.addMember()
+            await this.addMember();
             return;
           }
           this.$router.push("/setting");
